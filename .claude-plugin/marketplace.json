@@ -1,0 +1,18 @@
+{
+  "name": "choicegate",
+  "owner": {
+    "name": "Rahul Krishna"
+  },
+  "description": "Self-hosted Claude Code marketplace for ChoiceGate, the capability-selection gate that returns one deterministic receipt and stops before execution.",
+  "plugins": [
+    {
+      "name": "choicegate",
+      "source": ".",
+      "displayName": "ChoiceGate",
+      "description": "Packages ChoiceGate's seven atomic capability-selection skills; selects one safe, evidence-bound path and returns a deterministic receipt without executing, installing, or configuring it.",
+      "version": "0.1.0",
+      "license": "MIT",
+      "category": "productivity"
+    }
+  ]
+}

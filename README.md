@@ -16,6 +16,31 @@ returns a deterministic receipt recording what was chosen, why, and what it does
 malformed or ambiguous input it refuses with a named error, and it never installs, configures, or
 runs what it selects.
 
+## Getting started
+
+**Prerequisites:** Python 3.11 or newer (standard library only, no third-party packages) to run the
+command-line interface, and Claude Code to use ChoiceGate as a plugin.
+
+**Install:** two labeled paths, pick the one you need.
+
+- In Claude Code (one command): run `/plugin marketplace add https://gitlab.com/krahul02004/ChoiceGate`
+  and then `/plugin install choicegate`. This is a self-hosted marketplace served from this
+  repository (the root-level `.claude-plugin/marketplace.json`), and it is not published to any
+  external or third-party plugin registry.
+- Python CLI: `pip install choicegate`. This installs three console entry points
+  (`choicegate-dispatch`, `choicegate-route`, and `choicegate-rank`) and needs nothing beyond the
+  Python standard library.
+
+**Check it works:** after the CLI install, run one command and confirm the usage line it prints.
+
+```powershell
+choicegate-dispatch --help
+```
+
+```text
+usage: choicegate-dispatch [-h] request
+```
+
 ## Why the gate exists
 
 Capability selection is a policy decision, not a search-results list. An agent that grabs the first

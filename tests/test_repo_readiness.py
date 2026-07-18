@@ -58,7 +58,7 @@ class RepoReadinessTests(unittest.TestCase):
         combined = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (
             "README.md", "ROADMAP.md", "docs/public/ARCHITECTURE.md", "docs/public/VALIDATION.md"
         )).lower()
-        for phrase in ("no marketplace", "capability registry", "selection is never execution", "fails closed"):
+        for phrase in ("self-hosted marketplace", "capability registry", "selection is never execution", "fails closed"):
             self.assertIn(phrase, combined)
         canonical = "gitlab.com/krahul02004/choicegate"
         self.assertIn(canonical, combined)
