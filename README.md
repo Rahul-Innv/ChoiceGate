@@ -6,18 +6,14 @@
 
 # ChoiceGate
 
-[![pipeline status](https://gitlab.com/krahul02004/ChoiceGate/badges/main/pipeline.svg)](https://gitlab.com/krahul02004/ChoiceGate/-/commits/main)
-[![PyPI version](https://img.shields.io/pypi/v/choicegate)](https://pypi.org/project/choicegate/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 ChoiceGate is a seven-skill atomic family that selects one safe capability path from frozen,
 evidence-bound candidates. It returns a deterministic receipt or fails closed; it does not execute,
 install, authorize, authenticate, or configure the selected capability.
 
 Lifecycle eligibility and routing priority remain owned by an external capability registry.
-ChoiceGate binds to one owner-accepted registry snapshot by content hash and never mutates it.
-Version `0.1.0` is published on PyPI as [`choicegate`](https://pypi.org/project/choicegate/);
-installing it is not a marketplace entry, activation, or lifecycle claim.
+ChoiceGate binds to one owner-accepted registry snapshot by content hash and never mutates it. The
+local `0.1.0` version is preparation metadata, not a marketplace entry, installation, or lifecycle
+claim.
 
 ## Atomic family
 
@@ -75,24 +71,6 @@ of this repository, so the authority-bound suite runs in the maintainer's enviro
 
 The demo uses the real local test result and contains no owner path, credential, remote claim, or
 fabricated usage metric.
-
-## Install
-
-The shared routing core installs from PyPI with no runtime dependencies beyond the standard
-library:
-
-```powershell
-pip install choicegate
-```
-
-Three console entry points ship with the package: `choicegate-dispatch` selects one family leaf,
-`choicegate-route` routes one hash-bound registry capability, and `choicegate-rank` is the
-backward-compatible discovery-ranking entry point. Each reads strict JSON from a file argument or
-`-` for stdin and writes one deterministic receipt:
-
-```powershell
-choicegate-dispatch --help
-```
 
 ## Packaging
 
