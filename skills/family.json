@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "family": "choicegate",
+  "canonical_owner": "choicegate-family",
+  "authority_state": "candidate-inactive",
+  "shared_neutral_core": {
+    "family_dispatcher": "scripts/select_family_leaf.py",
+    "capability_router": "scripts/route_capabilities.py",
+    "deterministic_helper": "scripts/rank_candidates.py",
+    "request_schema": "schemas/route-request.schema.json",
+    "receipt_schema": "schemas/decision-receipt.schema.json"
+  },
+  "dispatcher_contract": {
+    "id": "choicegate",
+    "selection_rule": "exactly-one-domain-leaf-or-no-safe-route",
+    "contains_leaf_implementation": false,
+    "multiple_explicit_domains": "no-safe-route",
+    "multiple_inferred_domains": "no-safe-route",
+    "one_explicit_domain_precedes_inferred_domains": true
+  },
+  "compatibility_aliases": [
+    {
+      "id": "discover-better-tools",
+      "target": "choicegate",
+      "invocation_policy": "explicit-legacy-name-only",
+      "transition_state": "pending-separate-promotion",
+      "canonical": false
+    }
+  ],
+  "domain_boundaries": [
+    {
+      "domain": "skills",
+      "owner": "choicegate-skills",
+      "includes": ["installed-skill", "registered-skill", "candidate-skill", "approved-skill-bundle"],
+      "excludes": ["local-cli", "plugin", "connector", "mcp", "api", "sdk", "provider"]
+    },
+    {
+      "domain": "tools",
+      "owner": "choicegate-tools",
+      "includes": ["local-cli", "local-executable", "local-script", "deterministic-utility"],
+      "excludes": ["plugin", "app", "connector", "mcp", "api", "sdk", "provider-integration"]
+    },
+    {
+      "domain": "integrations",
+      "owner": "choicegate-integrations",
+      "includes": ["plugin", "app", "connector", "mcp", "api", "sdk", "provider-integration"],
+      "excludes": ["local-cli", "local-executable", "local-script", "deterministic-utility"]
+    },
+    {
+      "domain": "generators",
+      "owner": "choicegate-generators",
+      "includes": ["model-selection", "content-generation", "media-generation"],
+      "excludes": ["provider-configuration", "generated-output-execution"]
+    },
+    {
+      "domain": "context",
+      "owner": "choicegate-context",
+      "includes": ["measured-context-intervention", "context-budget-decision"],
+      "excludes": ["unmeasured-context-loading", "capability-execution"]
+    },
+    {
+      "domain": "refresh",
+      "owner": "choicegate-refresh",
+      "includes": ["freshness-decision", "evidence-delta", "reroute-required"],
+      "excludes": ["silent-reuse", "capability-execution"]
+    }
+  ],
+  "leaves": [
+    {
+      "id": "choicegate",
+      "kind": "dispatcher",
+      "intent_owner": "choicegate-family-dispatch",
+      "independently_measurable_output": "one-domain-leaf-selection-or-no-safe-route",
+      "bounded_input": "typed-family-claims-v1",
+      "bounded_output": "choicegate.family-dispatch-receipt/v1",
+      "non_goals": ["rank-capabilities", "execute-capability", "install", "authorize"],
+      "core_entrypoint": "scripts/select_family_leaf.py"
+    },
+    {
+      "id": "choicegate-skills",
+      "kind": "atomic-leaf",
+      "intent_owner": "skill-selection",
+      "independently_measurable_output": "one-eligible-skill-or-approved-skill-bundle-receipt",
+      "bounded_input": "hash-bound-registry-route-request",
+      "bounded_output": "choicegate.decision-receipt/v1",
+      "non_goals": ["execute-skill", "install-skill", "select-local-cli", "select-integration"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    },
+    {
+      "id": "choicegate-tools",
+      "kind": "atomic-leaf",
+      "intent_owner": "local-tool-selection",
+      "independently_measurable_output": "one-local-tool-receipt",
+      "bounded_input": "hash-bound-local-tool-route-request",
+      "bounded_output": "choicegate.decision-receipt/v1",
+      "non_goals": ["execute-tool", "install-tool", "select-plugin", "select-api", "select-sdk"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    },
+    {
+      "id": "choicegate-integrations",
+      "kind": "atomic-leaf",
+      "intent_owner": "integration-selection",
+      "independently_measurable_output": "one-integration-path-or-owner-gated-setup-receipt",
+      "bounded_input": "hash-bound-integration-route-request",
+      "bounded_output": "choicegate.decision-receipt/v1",
+      "non_goals": ["call-provider", "authenticate", "install-integration", "select-local-cli"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    },
+    {
+      "id": "choicegate-generators",
+      "kind": "atomic-leaf",
+      "intent_owner": "generator-selection",
+      "independently_measurable_output": "one-generation-capability-receipt",
+      "bounded_input": "hash-bound-generator-route-request",
+      "bounded_output": "choicegate.decision-receipt/v1",
+      "non_goals": ["generate-content", "call-model", "configure-provider", "spend"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    },
+    {
+      "id": "choicegate-context",
+      "kind": "atomic-leaf",
+      "intent_owner": "context-intervention-selection",
+      "independently_measurable_output": "one-budget-bound-context-route-receipt",
+      "bounded_input": "hash-bound-context-route-request",
+      "bounded_output": "choicegate.decision-receipt/v1",
+      "non_goals": ["load-context", "mutate-context", "ignore-budget", "execute-capability"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    },
+    {
+      "id": "choicegate-refresh",
+      "kind": "atomic-leaf",
+      "intent_owner": "evidence-freshness-selection",
+      "independently_measurable_output": "one-freshness-delta-and-reroute-decision",
+      "bounded_input": "prior-receipt-and-frozen-evidence-bindings",
+      "bounded_output": "choicegate.decision-receipt/v1-or-no-safe-route",
+      "non_goals": ["silently-reuse-stale-receipt", "execute-capability", "mutate-source", "browse-without-gate"],
+      "core_entrypoint": "scripts/route_capabilities.py"
+    }
+  ]
+}

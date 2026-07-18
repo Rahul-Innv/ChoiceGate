@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discover Better Tools"
+  short_description: "Find safer purpose-built options before browser"
+  default_prompt: "Use $discover-better-tools to compare safe purpose-built execution options before doing this manually."

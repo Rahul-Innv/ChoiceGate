@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="560" viewBox="0 0 1040 560" role="img" aria-labelledby="title desc">
+  <title id="title">ChoiceGate deterministic routing demo</title>
+  <desc id="desc">A terminal-style diagram showing the real portable-suite result, one decision receipt, and the stop before execution.</desc>
+  <rect width="1040" height="560" rx="24" fill="#0b1020"/>
+  <rect x="36" y="36" width="968" height="488" rx="18" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <circle cx="72" cy="72" r="8" fill="#f87171"/>
+  <circle cx="98" cy="72" r="8" fill="#fbbf24"/>
+  <circle cx="124" cy="72" r="8" fill="#34d399"/>
+  <text x="68" y="124" fill="#94a3b8" font-family="Consolas, monospace" font-size="18">PS&gt; python -B -m unittest discover -s tests -p "test_*.py"</text>
+  <text x="68" y="170" fill="#e2e8f0" font-family="Consolas, monospace" font-size="20">Ran 21 tests in 16.814s</text>
+  <text x="68" y="210" fill="#34d399" font-family="Consolas, monospace" font-size="22">OK</text>
+  <line x1="68" y1="246" x2="972" y2="246" stroke="#334155" stroke-width="2"/>
+  <text x="68" y="294" fill="#60a5fa" font-family="Consolas, monospace" font-size="20">decision.route_type = "atomic-leaf"</text>
+  <text x="68" y="334" fill="#60a5fa" font-family="Consolas, monospace" font-size="20">decision.leaf_id = "choicegate-tools"</text>
+  <text x="68" y="374" fill="#e2e8f0" font-family="Consolas, monospace" font-size="18">receipt_sha256 = deterministic, evidence-bound</text>
+  <text x="68" y="424" fill="#fbbf24" font-family="Consolas, monospace" font-size="22">STOP: selection is not execution</text>
+  <text x="68" y="466" fill="#94a3b8" font-family="Consolas, monospace" font-size="18">No install | no auth | no provider call | no marketplace | no write</text>
+  <text x="68" y="500" fill="#64748b" font-family="Consolas, monospace" font-size="17">Exact local result; no owner paths, secrets, or remote claims.</text>
+</svg>

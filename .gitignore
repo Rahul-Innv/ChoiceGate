@@ -1,0 +1,32 @@
+# Python and local test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+coverage/
+
+# Generated package output
+dist/
+build/
+*.zip
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+*.egg-info/
+__pycache__/
+dist/

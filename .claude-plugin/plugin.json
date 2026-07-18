@@ -1,0 +1,17 @@
+{
+  "name": "choicegate",
+  "displayName": "ChoiceGate",
+  "version": "0.1.0",
+  "description": "Packages ChoiceGate's seven atomic capability-selection skills.",
+  "author": {
+    "name": "Rahul Krishna"
+  },
+  "license": "MIT",
+  "keywords": [
+    "capability-selection",
+    "routing",
+    "skills",
+    "tools",
+    "claude-code"
+  ]
+}

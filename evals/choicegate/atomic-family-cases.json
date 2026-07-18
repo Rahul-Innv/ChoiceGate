@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "positive_cases": [
+    {"id": "dispatch-family", "prompt": "Use ChoiceGate to decide whether this capability request belongs to skills, tools, integrations, generators, context, or refresh.", "expected_skill": "choicegate"},
+    {"id": "select-skill", "prompt": "Select the eligible installed skill or approved skill bundle for this task.", "domain": "skills", "expected_leaf": "choicegate-skills"},
+    {"id": "select-local-tool", "prompt": "Select a local Windows CLI or deterministic script without running it.", "domain": "tools", "expected_leaf": "choicegate-tools"},
+    {"id": "select-integration", "prompt": "Find the best connector, plugin, MCP server, API, or SDK before browser work.", "domain": "integrations", "expected_leaf": "choicegate-integrations"},
+    {"id": "select-generator", "prompt": "Choose the model or media generation capability under this cost and risk ceiling.", "domain": "generators", "expected_leaf": "choicegate-generators"},
+    {"id": "select-context", "prompt": "Choose one measured context intervention under the declared budget.", "domain": "context", "expected_leaf": "choicegate-context"},
+    {"id": "refresh-selection", "prompt": "Check whether the prior capability receipt is stale and require rerouting if its bindings changed.", "domain": "refresh", "expected_leaf": "choicegate-refresh"}
+  ],
+  "near_miss_cases": [
+    {"id": "already-selected", "prompt": "The capability was already selected; execute it now.", "excluded_skill": "choicegate", "expected_leaf": null},
+    {"id": "skills-vs-cli", "prompt": "Select a local CLI, not a skill.", "excluded_skill": "choicegate-skills", "expected_leaf": "choicegate-tools"},
+    {"id": "tools-vs-connector", "prompt": "Select a hosted connector, not a local executable.", "excluded_skill": "choicegate-tools", "expected_leaf": "choicegate-integrations"},
+    {"id": "integrations-vs-cli", "prompt": "Select an already-local script, not a plugin or API.", "excluded_skill": "choicegate-integrations", "expected_leaf": "choicegate-tools"},
+    {"id": "generators-vs-execution", "prompt": "Generate the image with the already-selected model.", "excluded_skill": "choicegate-generators", "expected_leaf": null},
+    {"id": "context-vs-loading", "prompt": "Load the already-approved context bundle now.", "excluded_skill": "choicegate-context", "expected_leaf": null},
+    {"id": "refresh-vs-unchanged-handoff", "prompt": "Continue the complete unchanged valid handoff.", "excluded_skill": "choicegate-refresh", "expected_leaf": null}
+  ],
+  "pairwise_collision_cases": [
+    {"id": "skills-tools", "explicit": "skills", "inferred": "tools", "expected_leaf": "choicegate-skills"},
+    {"id": "skills-integrations", "explicit": "integrations", "inferred": "skills", "expected_leaf": "choicegate-integrations"},
+    {"id": "skills-generators", "explicit": "generators", "inferred": "skills", "expected_leaf": "choicegate-generators"},
+    {"id": "skills-context", "explicit": "context", "inferred": "skills", "expected_leaf": "choicegate-context"},
+    {"id": "skills-refresh", "explicit": "refresh", "inferred": "skills", "expected_leaf": "choicegate-refresh"},
+    {"id": "tools-integrations", "explicit": "tools", "inferred": "integrations", "expected_leaf": "choicegate-tools"},
+    {"id": "tools-generators", "explicit": "generators", "inferred": "tools", "expected_leaf": "choicegate-generators"},
+    {"id": "tools-context", "explicit": "context", "inferred": "tools", "expected_leaf": "choicegate-context"},
+    {"id": "tools-refresh", "explicit": "refresh", "inferred": "tools", "expected_leaf": "choicegate-refresh"},
+    {"id": "integrations-generators", "explicit": "integrations", "inferred": "generators", "expected_leaf": "choicegate-integrations"},
+    {"id": "integrations-context", "explicit": "integrations", "inferred": "context", "expected_leaf": "choicegate-integrations"},
+    {"id": "integrations-refresh", "explicit": "refresh", "inferred": "integrations", "expected_leaf": "choicegate-refresh"},
+    {"id": "generators-context", "explicit": "generators", "inferred": "context", "expected_leaf": "choicegate-generators"},
+    {"id": "generators-refresh", "explicit": "refresh", "inferred": "generators", "expected_leaf": "choicegate-refresh"},
+    {"id": "context-refresh", "explicit": "refresh", "inferred": "context", "expected_leaf": "choicegate-refresh"}
+  ]
+}

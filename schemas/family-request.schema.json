@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://choicegate.local/schemas/family-request.schema.json",
+  "title": "ChoiceGate atomic-family request",
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "specificity", "evidence_id"],
+      "properties": {
+        "domain": {"enum": ["skills", "tools", "integrations", "generators", "context", "refresh"]},
+        "specificity": {"enum": ["explicit", "inferred"]},
+        "evidence_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "request_id", "claims", "legacy_invocation"],
+  "properties": {
+    "contract_version": {"const": "choicegate.family-request/v1"},
+    "request_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "claims": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "legacy_invocation": {"type": "boolean"}
+  }
+}

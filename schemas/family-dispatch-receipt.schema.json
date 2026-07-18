@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://choicegate.local/schemas/family-dispatch-receipt.schema.json",
+  "title": "ChoiceGate atomic-family dispatch receipt",
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "specificity", "evidence_id"],
+      "properties": {
+        "domain": {"enum": ["skills", "tools", "integrations", "generators", "context", "refresh"]},
+        "specificity": {"enum": ["explicit", "inferred"]},
+        "evidence_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["receipt_version", "request_id", "request_sha256", "claims", "decision", "prohibited_actions", "receipt_sha256"],
+  "properties": {
+    "receipt_version": {"const": "choicegate.family-dispatch-receipt/v1"},
+    "request_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claims": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_type", "leaf_id", "reason"],
+      "properties": {
+        "route_type": {"enum": ["dispatcher", "atomic-leaf", "no-safe-route"]},
+        "leaf_id": {
+          "type": ["string", "null"],
+          "enum": ["choicegate", "choicegate-skills", "choicegate-tools", "choicegate-integrations", "choicegate-generators", "choicegate-context", "choicegate-refresh", null]
+        },
+        "reason": {"enum": ["explicit-legacy-alias", "no-supported-domain-claim", "single-domain-claim", "one-explicit-domain-precedes-inferred", "ambiguous-domain-claims"]}
+      }
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

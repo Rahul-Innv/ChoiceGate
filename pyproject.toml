@@ -1,0 +1,66 @@
+[build-system]
+requires = []
+build-backend = "choicegate_backend"
+backend-path = ["tools"]
+
+[project]
+name = "choicegate"
+version = "0.1.0"
+description = "Deterministic capability-selection gate: select one safe, evidence-bound capability path or fail closed."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Rahul Krishna" }]
+keywords = ["capability-selection", "routing", "skills", "tools", "safety"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+]
+
+[project.scripts]
+choicegate-dispatch = "choicegate.select_family_leaf:main"
+choicegate-route = "choicegate.route_capabilities:main"
+choicegate-rank = "choicegate.rank_candidates:main"
+
+[tool.choicegate-backend]
+# The wheel maps the shared routing core in scripts/ to the importable
+# "choicegate" package (equivalent to a package-dir {"choicegate": "scripts"}).
+package = "choicegate"
+package-source = "scripts"
+# Explicit sdist allowlist: only these files and directories ship in the sdist.
+sdist-include = [
+  ".claude-plugin",
+  ".codex-plugin",
+  ".gitattributes",
+  ".gitignore",
+  ".gitlab",
+  ".gitlab-ci.yml",
+  "CHANGELOG.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "LICENSE",
+  "README.md",
+  "ROADMAP.md",
+  "SECURITY.md",
+  "SKILL.md",
+  "VERSION",
+  "adapters",
+  "agents",
+  "assets",
+  "docs",
+  "evals",
+  "packaging",
+  "pyproject.toml",
+  "references",
+  "schemas",
+  "scripts",
+  "skills",
+  "tests",
+  "tools",
+]

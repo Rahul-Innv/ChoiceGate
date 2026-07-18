@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "package_id": "choicegate",
+  "version": "0.1.0",
+  "authority_state": "candidate-inactive",
+  "common_directories": [
+    "references",
+    "schemas",
+    "scripts",
+    "skills"
+  ],
+  "common_files": [
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "VERSION",
+    "assets/logo.svg"
+  ],
+  "surfaces": {
+    "claude-code": {
+      "manifest": ".claude-plugin/plugin.json",
+      "extra_files": [
+        "adapters/claude-code/manifest.json"
+      ]
+    },
+    "codex": {
+      "manifest": ".codex-plugin/plugin.json",
+      "extra_files": [
+        "adapters/codex/agents/openai.yaml",
+        "adapters/codex/manifest.json"
+      ]
+    }
+  },
+  "excluded_prefixes": [
+    ".git",
+    "dist",
+    "evals",
+    "tests"
+  ],
+  "publication_state": "offline-dry-run-only"
+}

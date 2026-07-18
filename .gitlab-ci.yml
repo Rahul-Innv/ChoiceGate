@@ -1,0 +1,15 @@
+stages:
+  - test
+
+portable-contracts:
+  stage: test
+  image: python:3.12-alpine
+  variables:
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTHONHASHSEED: "0"
+  script:
+    - python -B -m unittest discover -s tests -p "test_*.py"
+    - python -B -m py_compile scripts/*.py tools/*.py
+
+# The stronger authority-bound suite is bound to the owner-accepted capability-registry snapshot,
+# which is not part of this repository. Maintainers replay it before accepting a release candidate.

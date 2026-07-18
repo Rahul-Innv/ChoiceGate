@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChoiceGate"
+  short_description: "Select one safe capability path"
+  default_prompt: "Use $choicegate to select exactly one atomic capability-selection leaf, then preserve its complete receipt."

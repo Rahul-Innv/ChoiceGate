@@ -1,0 +1,28 @@
+{
+  "name": "choicegate",
+  "version": "0.1.0",
+  "description": "Selects one safe, evidence-bound capability path without executing or installing it.",
+  "author": {
+    "name": "Rahul Krishna"
+  },
+  "license": "MIT",
+  "keywords": [
+    "capability-selection",
+    "routing",
+    "skills",
+    "tools",
+    "safety"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ChoiceGate",
+    "shortDescription": "Select one safe capability path.",
+    "longDescription": "ChoiceGate ranks eligible skills, tools, integrations, generators, context interventions, and refresh paths against frozen evidence, then emits one deterministic receipt or fails closed.",
+    "developerName": "Rahul Krishna",
+    "category": "Productivity",
+    "capabilities": [
+      "Read"
+    ],
+    "defaultPrompt": "Use $choicegate to select exactly one safe capability path and preserve its receipt."
+  }
+}

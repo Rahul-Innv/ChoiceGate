@@ -1,0 +1,550 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "choicegate.route-request/v1",
+  "title": "ChoiceGate deterministic route request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "request_id",
+    "evaluation_time_utc",
+    "task",
+    "candidate_evidence",
+    "inventory",
+    "policy"
+  ],
+  "properties": {
+    "contract_version": { "const": "choicegate.route-request/v1" },
+    "request_id": { "$ref": "#/$defs/stableId" },
+    "evaluation_time_utc": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-8]))|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\\.[0-9]+)?Z$"
+    },
+    "task": { "$ref": "#/$defs/task" },
+    "candidate_evidence": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/candidateEvidence" }
+    },
+    "inventory": { "$ref": "#/$defs/inventory" },
+    "prior_receipt": { "$ref": "#/$defs/priorReceiptEnvelope" },
+    "policy": { "$ref": "#/$defs/policy" }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gitCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "stringSet": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/stableId" }
+    },
+    "allowedScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "local_files_only",
+        "write_files",
+        "remote_actions",
+        "outward_messages",
+        "paid_actions",
+        "provider_use",
+        "provider_configuration"
+      ],
+      "properties": {
+        "local_files_only": { "type": "boolean" },
+        "write_files": { "type": "boolean" },
+        "remote_actions": { "type": "boolean" },
+        "outward_messages": { "type": "boolean" },
+        "paid_actions": { "type": "boolean" },
+        "provider_use": { "type": "boolean" },
+        "provider_configuration": { "type": "boolean" }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_class",
+        "required_outcomes",
+        "allowed_scope",
+        "surface",
+        "private_data_class",
+        "authorization_required",
+        "explicit_browser_choice",
+        "intrinsic_visual_testing",
+        "risk_class",
+        "max_discoverable_capabilities",
+        "allow_setup_choice",
+        "fixture_scope",
+        "requested_route_ids",
+        "preconditions",
+        "selected_path_failed"
+      ],
+      "properties": {
+        "task_class": { "$ref": "#/$defs/stableId" },
+        "required_outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stableId" }
+        },
+        "allowed_scope": { "$ref": "#/$defs/allowedScope" },
+        "surface": {
+          "type": "string",
+          "enum": ["codex", "claude-code", "local", "browser", "manual"]
+        },
+        "private_data_class": {
+          "type": "string",
+          "enum": ["none", "public", "private", "sensitive"]
+        },
+        "authorization_required": { "type": "boolean" },
+        "explicit_browser_choice": { "type": "boolean" },
+        "intrinsic_visual_testing": { "type": "boolean" },
+        "risk_class": {
+          "type": "string",
+          "enum": ["low", "low-medium", "medium", "high", "critical"]
+        },
+        "max_discoverable_capabilities": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "allow_setup_choice": { "type": "boolean" },
+        "fixture_scope": { "type": "boolean" },
+        "fixture_id": { "$ref": "#/$defs/stableId" },
+        "requested_route_ids": { "$ref": "#/$defs/stringSet" },
+        "preconditions": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/stableId" },
+          "additionalProperties": {
+            "type": ["boolean", "integer", "number", "string"]
+          }
+        },
+        "owner_selected_route_id": { "$ref": "#/$defs/stableId" },
+        "selected_path_failed": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "fixture_scope": { "const": true } } },
+          "then": { "required": ["fixture_id"] },
+          "else": { "not": { "required": ["fixture_id"] } }
+        },
+        {
+          "if": { "required": ["owner_selected_route_id"] },
+          "then": {},
+          "else": { "properties": { "selected_path_failed": { "const": false } } }
+        }
+      ]
+    },
+    "candidateEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_type",
+        "route_id",
+        "canonical_route_id",
+        "version",
+        "task_class_match",
+        "covers_required_outcomes",
+        "necessary_member_roles",
+        "task_fit",
+        "context_cost",
+        "expected_cost",
+        "evidence_refs",
+        "evidence_fresh",
+        "risk_flags",
+        "required_scope",
+        "required_private_data_class"
+      ],
+      "properties": {
+        "route_type": { "type": "string", "enum": ["atomic", "bundle"] },
+        "route_id": { "$ref": "#/$defs/stableId" },
+        "canonical_route_id": { "$ref": "#/$defs/stableId" },
+        "version": { "type": ["string", "null"], "maxLength": 80 },
+        "task_class_match": { "type": "boolean" },
+        "covers_required_outcomes": { "$ref": "#/$defs/stringSet" },
+        "necessary_member_roles": { "$ref": "#/$defs/stringSet" },
+        "task_fit": { "type": "number", "minimum": 0, "maximum": 5 },
+        "context_cost": { "type": "number", "minimum": 0, "maximum": 5 },
+        "expected_cost": { "type": "number", "minimum": 0, "maximum": 5 },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+        },
+        "evidence_fresh": { "type": "boolean" },
+        "risk_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "account-evasion",
+              "critical-unresolved-risk",
+              "secret-exposure",
+              "unsafe",
+              "unreviewed-setup",
+              "unverified-claim"
+            ]
+          }
+        },
+        "required_scope": { "$ref": "#/$defs/allowedScope" },
+        "required_private_data_class": {
+          "type": "string",
+          "enum": ["none", "public", "private", "sensitive"]
+        }
+      }
+    },
+    "inventoryComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "content_utf8"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]+\\.json$"
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "content_utf8": { "type": "string", "minLength": 2 }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "accepted_registry_commit",
+        "state_model_id",
+        "manifest_algorithm",
+        "manifest_fingerprint",
+        "components"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "accepted_registry_commit": { "$ref": "#/$defs/gitCommit" },
+        "state_model_id": { "const": "orthogonal-seven-axis-v1" },
+        "manifest_algorithm": { "const": "sha256-path-hash-manifest-v1" },
+        "manifest_fingerprint": { "$ref": "#/$defs/sha256" },
+        "components": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/inventoryComponent" },
+          "allOf": [
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/inventory-fixtures.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/manifest.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/routing-cases.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/bundles.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/capabilities.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/conflicts.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/dependencies.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/preconditions.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/bundle.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/capability.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/conflict.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/dependency.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/precondition.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/supersession.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/state-axes.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/supersessions.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 }
+          ]
+        }
+      }
+    },
+    "setupPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "approval_ids",
+        "reversible",
+        "reviewed_instructions",
+        "allowed_actions"
+      ],
+      "properties": {
+        "route_id": { "$ref": "#/$defs/stableId" },
+        "approval_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stableId" }
+        },
+        "reversible": { "const": true },
+        "reviewed_instructions": { "const": true },
+        "allowed_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["install", "enable", "expose", "authorize", "configure"]
+          }
+        }
+      }
+    },
+    "priorReceiptEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_version",
+        "request_id",
+        "request_sha256",
+        "inventory_binding",
+        "router_binding",
+        "task",
+        "decision",
+        "bundle_members",
+        "candidates",
+        "approvals_required",
+        "fallback",
+        "discovery",
+        "reselection_triggers",
+        "prohibited_actions",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "receipt_version": { "const": "choicegate.decision-receipt/v1" },
+        "request_id": { "$ref": "#/$defs/stableId" },
+        "request_sha256": { "$ref": "#/$defs/sha256" },
+        "inventory_binding": { "$ref": "#/$defs/priorInventoryBinding" },
+        "router_binding": { "$ref": "#/$defs/priorRouterBinding" },
+        "task": { "$ref": "#/$defs/priorNormalizedTask" },
+        "decision": { "$ref": "#/$defs/priorDecision" },
+        "bundle_members": { "type": "array", "items": { "$ref": "#/$defs/priorBundleMember" } },
+        "candidates": { "type": "array", "items": { "$ref": "#/$defs/priorCandidate" } },
+        "approvals_required": { "$ref": "#/$defs/stringSet" },
+        "fallback": { "$ref": "#/$defs/priorFallback" },
+        "discovery": { "$ref": "#/$defs/priorDiscovery" },
+        "reselection_triggers": { "$ref": "#/$defs/stringSet" },
+        "prohibited_actions": { "$ref": "#/$defs/stringSet" },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "priorNullableStableId": {
+      "oneOf": [{ "$ref": "#/$defs/stableId" }, { "type": "null" }]
+    },
+    "priorScalarMap": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/stableId" },
+      "additionalProperties": { "type": ["string", "number", "boolean"] }
+    },
+    "priorComponentHash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^[A-Za-z0-9._/-]+\\.json$" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "priorInventoryBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_registry_commit", "state_model_id", "manifest_algorithm", "manifest_fingerprint", "component_hashes"],
+      "properties": {
+        "accepted_registry_commit": { "$ref": "#/$defs/gitCommit" },
+        "state_model_id": { "const": "orthogonal-seven-axis-v1" },
+        "manifest_algorithm": { "const": "sha256-path-hash-manifest-v1" },
+        "manifest_fingerprint": { "$ref": "#/$defs/sha256" },
+        "component_hashes": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/priorComponentHash" },
+          "allOf": [
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/inventory-fixtures.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/manifest.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "evals/choicegate/routing-cases.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/bundles.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/capabilities.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/conflicts.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/dependencies.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/preconditions.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/bundle.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/capability.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/conflict.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/dependency.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/precondition.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/schemas/supersession.schema.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/state-axes.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "path": { "const": "registry/supersessions.json" } }, "required": ["path"] }, "minContains": 1, "maxContains": 1 }
+          ]
+        }
+      }
+    },
+    "priorRouterBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["choicegate_commit", "router_version", "router_policy_version", "router_policy_sha256", "request_schema_sha256", "receipt_schema_sha256", "router_source_sha256", "deterministic_helper_sha256", "router_text_hash_algorithm"],
+      "properties": {
+        "choicegate_commit": { "$ref": "#/$defs/gitCommit" },
+        "router_version": { "const": "choicegate-bundle-router/v1" },
+        "router_policy_version": { "const": "choicegate-router-policy/v1" },
+        "router_policy_sha256": { "$ref": "#/$defs/sha256" },
+        "request_schema_sha256": { "$ref": "#/$defs/sha256" },
+        "receipt_schema_sha256": { "$ref": "#/$defs/sha256" },
+        "router_source_sha256": { "$ref": "#/$defs/sha256" },
+        "deterministic_helper_sha256": { "$ref": "#/$defs/sha256" },
+        "router_text_hash_algorithm": { "const": "sha256-utf8-lf-v1" }
+      }
+    },
+    "priorNormalizedTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_class", "required_outcomes", "allowed_scope", "surface", "private_data_class", "authorization_required", "explicit_browser_choice", "intrinsic_visual_testing", "risk_class", "max_discoverable_capabilities", "allow_setup_choice", "fixture_scope", "fixture_id", "requested_route_ids", "preconditions", "owner_selected_route_id", "selected_path_failed"],
+      "properties": {
+        "task_class": { "$ref": "#/$defs/stableId" },
+        "required_outcomes": { "$ref": "#/$defs/stringSet" },
+        "allowed_scope": { "$ref": "#/$defs/allowedScope" },
+        "surface": { "type": "string", "enum": ["codex", "claude-code", "local", "browser", "manual"] },
+        "private_data_class": { "type": "string", "enum": ["none", "public", "private", "sensitive"] },
+        "authorization_required": { "type": "boolean" },
+        "explicit_browser_choice": { "type": "boolean" },
+        "intrinsic_visual_testing": { "type": "boolean" },
+        "risk_class": { "type": "string", "enum": ["low", "low-medium", "medium", "high", "critical"] },
+        "max_discoverable_capabilities": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "allow_setup_choice": { "type": "boolean" },
+        "fixture_scope": { "type": "boolean" },
+        "fixture_id": { "$ref": "#/$defs/priorNullableStableId" },
+        "requested_route_ids": { "$ref": "#/$defs/stringSet" },
+        "preconditions": { "$ref": "#/$defs/priorScalarMap" },
+        "owner_selected_route_id": { "$ref": "#/$defs/priorNullableStableId" },
+        "selected_path_failed": { "type": "boolean" }
+      }
+    },
+    "priorDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_type", "route_id", "version", "owner", "executable", "reason"],
+      "properties": {
+        "route_type": { "type": "string", "enum": ["atomic", "bundle", "requires-setup-approval", "browser-manual", "no-safe-route", "handoff"] },
+        "route_id": { "$ref": "#/$defs/stableId" },
+        "version": { "type": ["string", "null"] },
+        "owner": { "$ref": "#/$defs/priorNullableStableId" },
+        "executable": { "type": "boolean" },
+        "reason": { "$ref": "#/$defs/stableId" }
+      }
+    },
+    "priorStateBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_state", "install_state", "enablement_state", "exposure_state", "authorization_state", "activity_state", "promotion_state"],
+      "properties": {
+        "source_state": { "type": "string" },
+        "install_state": { "type": "string" },
+        "enablement_state": { "type": "string" },
+        "exposure_state": { "type": "string" },
+        "authorization_state": { "type": "string" },
+        "activity_state": { "type": "string" },
+        "promotion_state": { "type": "string" }
+      }
+    },
+    "priorBundleMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order", "capability_id", "requirement", "role", "selection", "state_binding"],
+      "properties": {
+        "order": { "type": "integer", "minimum": 1 },
+        "capability_id": { "$ref": "#/$defs/stableId" },
+        "requirement": { "type": "string", "enum": ["required", "optional"] },
+        "role": { "$ref": "#/$defs/stableId" },
+        "selection": { "type": "string", "enum": ["selected", "omitted"] },
+        "state_binding": { "$ref": "#/$defs/priorStateBinding" }
+      }
+    },
+    "priorScoreBreakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_class_exact", "required_outcomes_covered", "task_fit", "scope_penalty", "risk_penalty", "context_cost", "expected_cost", "member_count", "selection_tuple", "lexical_tiebreak"],
+      "properties": {
+        "task_class_exact": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "required_outcomes_covered": { "type": "integer", "minimum": 0 },
+        "task_fit": { "type": "number", "minimum": 0, "maximum": 5 },
+        "scope_penalty": { "type": "integer", "minimum": 0 },
+        "risk_penalty": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "context_cost": { "type": "number", "minimum": 0, "maximum": 5 },
+        "expected_cost": { "type": "number", "minimum": 0, "maximum": 5 },
+        "member_count": { "type": "integer", "minimum": 1 },
+        "selection_tuple": { "type": "array", "minItems": 8, "maxItems": 8, "items": { "type": "number" } },
+        "lexical_tiebreak": { "$ref": "#/$defs/stableId" }
+      }
+    },
+    "priorCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_type", "route_id", "canonical_route_id", "candidate_evidence_sha256", "version", "owner", "pool", "hard_exclusion_codes", "evidence_refs", "score_breakdown", "duplicate_of", "final_disposition"],
+      "properties": {
+        "route_type": { "type": "string", "enum": ["atomic", "bundle"] },
+        "route_id": { "$ref": "#/$defs/stableId" },
+        "canonical_route_id": { "$ref": "#/$defs/stableId" },
+        "candidate_evidence_sha256": { "$ref": "#/$defs/sha256" },
+        "version": { "type": ["string", "null"] },
+        "owner": { "$ref": "#/$defs/priorNullableStableId" },
+        "pool": { "type": "string", "enum": ["executable", "setup-required", "rejected"] },
+        "hard_exclusion_codes": { "$ref": "#/$defs/stringSet" },
+        "evidence_refs": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "score_breakdown": { "oneOf": [{ "$ref": "#/$defs/priorScoreBreakdown" }, { "type": "null" }] },
+        "duplicate_of": { "$ref": "#/$defs/priorNullableStableId" },
+        "final_disposition": { "$ref": "#/$defs/stableId" }
+      }
+    },
+    "priorFallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_type", "route_id", "eligible", "reason"],
+      "properties": {
+        "route_type": { "type": "string", "enum": ["atomic", "bundle", "browser-manual", "no-safe-route"] },
+        "route_id": { "$ref": "#/$defs/stableId" },
+        "eligible": { "type": "boolean" },
+        "reason": { "$ref": "#/$defs/stableId" }
+      }
+    },
+    "priorDiscovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": { "type": "string", "enum": ["required", "skipped-explicit-browser", "skipped-intrinsic-visual", "suppressed-valid-handoff", "blocked-selected-path-failure"] },
+        "reason": { "$ref": "#/$defs/stableId" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_version",
+        "normal_ceiling",
+        "freshness_policy_id",
+        "explicit_owner_approved_setup_paths",
+        "policy_sha256"
+      ],
+      "properties": {
+        "policy_version": { "const": "choicegate-router-policy/v1" },
+        "normal_ceiling": { "type": "integer", "minimum": 8, "maximum": 12 },
+        "freshness_policy_id": { "const": "accepted-snapshot-explicit-v1" },
+        "explicit_owner_approved_setup_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/setupPath" }
+        },
+        "policy_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}
