@@ -8,12 +8,13 @@
 [![PyPI version](https://img.shields.io/pypi/v/choicegate)](https://pypi.org/project/choicegate/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-ChoiceGate decides which one of an agent's available capabilities — a skill, a local tool, an
-integration, a generator — should handle a task. It answers with a small JSON receipt that records
-what was chosen, why, and what the decision does not permit, and the same request always produces
-byte-identical output. When the input is malformed or two capabilities have an equal claim, it
-refuses with a named error instead of guessing — and it never installs, runs, or configures what it
-selects.
+ChoiceGate decides how an AI agent should get a task done. It weighs every candidate capability
+(skills, local tools, MCP servers, integrations), and not just what is already installed: when
+something materially better exists it surfaces that as an owner-approved install choice, and it
+treats driving a browser or doing the work by hand as the explicit last resort. Every decision
+returns a deterministic receipt recording what was chosen, why, and what it does not permit; on
+malformed or ambiguous input it refuses with a named error, and it never installs, configures, or
+runs what it selects.
 
 ## Why the gate exists
 
@@ -35,6 +36,24 @@ flowchart LR
   F -- "No" --> G["Stop"]
   F -- "Later" --> H["Selected workflow executes elsewhere"]
 ```
+
+## Beyond the installed stack
+
+The candidate pool is not limited to what is already installed. Discovery walks a bounded tier
+order (the current session's callable tools and skills, the client's plugin marketplace, the
+official MCP registry, provider documentation, then narrow public-web corroboration; one focused
+pass per tier), and every candidate carries one of five statuses that the ranker weighs directly:
+`installed_usable` outranks `requires_auth_or_config`, which outranks `available_to_install`, while
+`unverified_or_risky` and `browser_or_manual_fallback` contribute nothing to the score. A
+not-yet-installed candidate must also clear a material-improvement gate before it can rank at all:
+strong task fit, a credible advantage over doing the job by hand, and a weighted score of at least
+65, or it is rejected with the reason recorded. Winners that still need installation or
+configuration are never acted on; the router places them in a `setup-required` pool whose
+disposition is `requires-owner-setup-approval`, and only an explicit owner-approved setup path can
+move them further. Driving a browser or doing the work manually stays on the list as the explicit
+last resort, offered only as an owner choice when no trustworthy integration is materially better.
+And unknown is not neutral: a candidate whose security, privacy, or provenance cannot be verified
+scores zero on those dimensions and is rejected, not guessed about.
 
 ## Try it
 
@@ -88,14 +107,14 @@ Actual output (the `claims` echo is trimmed; everything else is verbatim):
 
 One eligible owner, one receipt, request and receipt pinned by SHA-256, and an explicit list of
 actions the selection does not authorize. Add a second `"explicit"` claim to the request and the
-receipt becomes `no-safe-route` / `ambiguous-domain-claims` — the gate refuses rather than guessing
+receipt becomes `no-safe-route` / `ambiguous-domain-claims`: the gate refuses rather than guessing
 between two owners.
 
 `choicegate-rank` needs no registry either: it scores caller-supplied candidates directly. A second
 bundled request, `evals/choicegate/sample-rank-request.json`, describes one candidate. Two gotchas:
 `candidates[].status` must be one of `installed_usable`, `requires_auth_or_config`,
 `available_to_install`, `unverified_or_risky`, or `browser_or_manual_fallback`, and all twelve
-`ratings` keys are required — a missing key is reported as "must be a number from 0 to 5".
+`ratings` keys are required; a missing key is reported as "must be a number from 0 to 5".
 
 ```powershell
 python -B scripts/rank_candidates.py evals/choicegate/sample-rank-request.json
@@ -134,15 +153,15 @@ job:
 | `choicegate-skills` | Pick one eligible skill, or one approved skill bundle. |
 | `choicegate-tools` | Pick one local command-line tool or deterministic script. |
 | `choicegate-integrations` | Pick one integration (API, plugin, MCP server, connector), or a receipt saying its setup needs owner approval. |
-| `choicegate-generators` | Pick one model or media generation capability — without calling it. |
+| `choicegate-generators` | Pick one model or media generation capability, without calling it. |
 | `choicegate-context` | Pick one way to spend a stated context budget. |
 | `choicegate-refresh` | Decide whether an earlier decision is still valid or must be redone. |
 
 Two programs implement the family. `scripts/select_family_leaf.py` (`choicegate-dispatch`) is the
 dispatcher you ran above; it needs nothing but the request. `scripts/route_capabilities.py`
 (`choicegate-route`) is the full router: it takes frozen candidate evidence and judges it against a
-capability registry — a separate, owner-maintained catalog of which capabilities exist and whether
-they are installed, enabled, and authorized — that ChoiceGate pins by content hash so a decision
+capability registry (a separate, owner-maintained catalog of which capabilities exist and whether
+they are installed, enabled, and authorized) that ChoiceGate pins by content hash so a decision
 can never rest on a catalog that has silently changed; the registry snapshot itself is not in this
 repository, and the bundled sample request above lets you try the gate without it. Strict JSON
 (duplicate keys rejected), exact schemas, and canonical hashing apply to both programs, so every
@@ -175,7 +194,7 @@ pip install choicegate
 ```
 
 No runtime dependencies beyond the Python standard library. Three console entry points ship with
-the package — `choicegate-dispatch` (family dispatch), `choicegate-route` (registry-bound
+the package: `choicegate-dispatch` (family dispatch), `choicegate-route` (registry-bound
 routing), and `choicegate-rank` (backward-compatible discovery ranking). Each reads strict JSON
 from a file argument or `-` for stdin and writes one deterministic receipt. Builds are
 deterministic and offline via the in-tree backend `tools/choicegate_backend.py`; see
@@ -184,7 +203,7 @@ deterministic and offline via the in-tree backend `tools/choicegate_backend.py`;
 ## Status
 
 `0.1.0`, alpha, on PyPI. The portable 21-test suite and CI pass offline; the registry-bound suite
-runs in the maintainer's environment. Selection is never execution — the full list of actions this
+runs in the maintainer's environment. Selection is never execution; the full list of actions this
 project will never take is in [STATUS.md](STATUS.md).
 
 ## Governance
