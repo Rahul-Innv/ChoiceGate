@@ -1,0 +1,8 @@
+{
+  "contract_version": "choicegate.family-request/v1",
+  "request_id": "readme-try-it",
+  "claims": [
+    {"domain": "tools", "specificity": "explicit", "evidence_id": "owner-asked-for-a-local-cli"}
+  ],
+  "legacy_invocation": false
+}

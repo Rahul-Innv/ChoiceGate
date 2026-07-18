@@ -49,6 +49,7 @@ sdist-include = [
   "ROADMAP.md",
   "SECURITY.md",
   "SKILL.md",
+  "STATUS.md",
   "VERSION",
   "adapters",
   "agents",
