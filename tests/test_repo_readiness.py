@@ -60,7 +60,9 @@ class RepoReadinessTests(unittest.TestCase):
         )).lower()
         for phrase in ("no marketplace", "capability registry", "selection is never execution", "fails closed"):
             self.assertIn(phrase, combined)
-        self.assertNotIn("gitlab.com/", combined)
+        canonical = "gitlab.com/krahul02004/choicegate"
+        self.assertIn(canonical, combined)
+        self.assertEqual(combined.count("gitlab.com/"), combined.count(canonical))
 
     def test_every_json_file_is_strict_utf8_and_parses(self) -> None:
         for path in ROOT.rglob("*.json"):
