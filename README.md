@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo.png" alt="ChoiceGate logo" width="180">
+</p>
+
 <p align="center"><img src="assets/logo.svg" alt="ChoiceGate logo" width="96"></p>
 
 # ChoiceGate
