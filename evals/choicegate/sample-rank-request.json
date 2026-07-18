@@ -1,0 +1,19 @@
+{
+  "candidates": [
+    {
+      "name": "ripgrep",
+      "kind": "cli",
+      "status": "installed_usable",
+      "provenance": "verified_maintainer",
+      "source_url": "https://github.com/BurntSushi/ripgrep",
+      "evidence": ["already installed and on PATH", "used successfully on this repository"],
+      "ratings": {
+        "task_fit": 5, "maintenance": 5, "least_privilege": 5, "data_access": 4,
+        "privacy": 5, "security": 5, "cost": 5, "rate_limits": 5,
+        "installation_friction": 5, "platform_compatibility": 5,
+        "non_overlap": 4, "improvement_over_fallback": 5
+      },
+      "flags": {}
+    }
+  ]
+}

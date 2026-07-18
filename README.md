@@ -91,6 +91,37 @@ actions the selection does not authorize. Add a second `"explicit"` claim to the
 receipt becomes `no-safe-route` / `ambiguous-domain-claims` — the gate refuses rather than guessing
 between two owners.
 
+`choicegate-rank` needs no registry either: it scores caller-supplied candidates directly. A second
+bundled request, `evals/choicegate/sample-rank-request.json`, describes one candidate. Two gotchas:
+`candidates[].status` must be one of `installed_usable`, `requires_auth_or_config`,
+`available_to_install`, `unverified_or_risky`, or `browser_or_manual_fallback`, and all twelve
+`ratings` keys are required — a missing key is reported as "must be a number from 0 to 5".
+
+```powershell
+python -B scripts/rank_candidates.py evals/choicegate/sample-rank-request.json
+```
+
+Actual output, trimmed:
+
+```json
+{
+  "duplicates": [],
+  "fallback": null,
+  "not_selected": [],
+  "owner_choice_required": true,
+  "ranked": [
+    {
+      "accepted": true,
+      ...
+      "score": 95.7,
+      "source_url": "https://github.com/burntsushi/ripgrep",
+      "status": "installed_usable"
+    }
+  ],
+  ...
+}
+```
+
 ## How it works
 
 ChoiceGate is a family of seven small skills sharing one routing core. The first is a dispatcher
