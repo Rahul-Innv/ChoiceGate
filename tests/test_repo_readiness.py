@@ -58,6 +58,9 @@ class RepoReadinessTests(unittest.TestCase):
             "Issues": "https://gitlab.com/krahul02004/ChoiceGate/-/work_items",
             "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
         })
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## [0.1.0] - 2026-07-18", changelog)
+        self.assertNotIn("## [0.1.0] - candidate", changelog)
 
     def test_public_docs_preserve_closed_action_language(self) -> None:
         combined = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (

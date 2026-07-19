@@ -4,7 +4,7 @@
 
 - Added Repository, Issues, and Changelog links to package metadata.
 
-## [0.1.0] - candidate
+## [0.1.0] - 2026-07-18
 
 ### Added
 
