@@ -238,7 +238,7 @@
         "accepted_registry_commit": {
           "oneOf": [{ "$ref": "#/$defs/gitCommit" }, { "type": "null" }]
         },
-        "registry_profile": { "const": "public-demo-v1" },
+        "registry_profile": { "enum": ["owner-accepted", "public-demo-v1"] },
         "state_model_id": { "const": "orthogonal-seven-axis-v1" },
         "manifest_algorithm": { "const": "sha256-path-hash-manifest-v1" },
         "manifest_fingerprint": { "$ref": "#/$defs/sha256" },
@@ -270,7 +270,10 @@
       },
       "allOf": [
         {
-          "if": { "required": ["registry_profile"] },
+          "if": {
+            "properties": { "registry_profile": { "const": "public-demo-v1" } },
+            "required": ["registry_profile"]
+          },
           "then": { "properties": { "accepted_registry_commit": { "type": "null" } } },
           "else": { "properties": { "accepted_registry_commit": { "$ref": "#/$defs/gitCommit" } } }
         }
@@ -370,7 +373,7 @@
         "accepted_registry_commit": {
           "oneOf": [{ "$ref": "#/$defs/gitCommit" }, { "type": "null" }]
         },
-        "registry_profile": { "const": "public-demo-v1" },
+        "registry_profile": { "enum": ["owner-accepted", "public-demo-v1"] },
         "state_model_id": { "const": "orthogonal-seven-axis-v1" },
         "manifest_algorithm": { "const": "sha256-path-hash-manifest-v1" },
         "manifest_fingerprint": { "$ref": "#/$defs/sha256" },
@@ -402,7 +405,10 @@
       },
       "allOf": [
         {
-          "if": { "required": ["registry_profile"] },
+          "if": {
+            "properties": { "registry_profile": { "const": "public-demo-v1" } },
+            "required": ["registry_profile"]
+          },
           "then": { "properties": { "accepted_registry_commit": { "type": "null" } } },
           "else": { "properties": { "accepted_registry_commit": { "$ref": "#/$defs/gitCommit" } } }
         }

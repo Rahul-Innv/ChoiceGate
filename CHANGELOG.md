@@ -6,6 +6,8 @@
 - Added a hash-pinned synthetic public registry profile and self-contained request that exercise the
   complete router without claiming owner-registry authority or Git provenance.
 - Replaced shell-dependent wildcard compilation docs with a PowerShell-safe `compileall` command.
+- Aligned all request, prior-receipt, and decision-receipt registry-profile schemas with runtime:
+  explicit and legacy owner profiles require a Git commit; the synthetic demo requires null.
 
 ## [0.1.0] - 2026-07-18
 
