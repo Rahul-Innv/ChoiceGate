@@ -1,0 +1,163 @@
+{
+  "candidate_evidence": [
+    {
+      "canonical_route_id": "demo-local-formatter",
+      "context_cost": 1,
+      "covers_required_outcomes": [
+        "formatted-json"
+      ],
+      "evidence_fresh": true,
+      "evidence_refs": [
+        "registry/capabilities.json#demo-local-formatter"
+      ],
+      "expected_cost": 0,
+      "necessary_member_roles": [],
+      "required_private_data_class": "public",
+      "required_scope": {
+        "local_files_only": true,
+        "outward_messages": false,
+        "paid_actions": false,
+        "provider_configuration": false,
+        "provider_use": false,
+        "remote_actions": false,
+        "write_files": false
+      },
+      "risk_flags": [],
+      "route_id": "demo-local-formatter",
+      "route_type": "atomic",
+      "task_class_match": true,
+      "task_fit": 5,
+      "version": null
+    }
+  ],
+  "contract_version": "choicegate.route-request/v1",
+  "evaluation_time_utc": "2026-07-19T00:00:00Z",
+  "inventory": {
+    "accepted_registry_commit": null,
+    "components": [
+      {
+        "content_utf8": "{\"fixtures\":[{\"bundle_overrides\":{},\"discoverable_ids\":[\"demo-local-formatter\"],\"id\":\"public-demo\",\"state_overrides\":{},\"supersession_overrides\":[],\"synthetic_candidates\":[],\"task_contract\":{\"local_files_only\":true}}]}",
+        "path": "evals/choicegate/inventory-fixtures.json",
+        "sha256": "5f6aecc89c2c7df13fa57ce22fd9d7b78414e837db65a522dd9f7a0693b15fdb"
+      },
+      {
+        "content_utf8": "{\"profile\":\"public-demo-v1\",\"purpose\":\"synthetic full-router verification\"}",
+        "path": "evals/choicegate/manifest.json",
+        "sha256": "01e5afcc22c81bafc1171824bdfe34f40213b174c4f137458ee259e062ae772d"
+      },
+      {
+        "content_utf8": "{\"cases\":[\"public-demo-selects-local-formatter\"]}",
+        "path": "evals/choicegate/routing-cases.json",
+        "sha256": "56f00880e6518315160ae63fe19ef250730016af69b264bf853030eb078e1b77"
+      },
+      {
+        "content_utf8": "{\"bundles\":[]}",
+        "path": "registry/bundles.json",
+        "sha256": "37235d979fb17d13d2b30a86dcc8fc7eeca4348a4a9414e994a7be734acb5bea"
+      },
+      {
+        "content_utf8": "{\"capabilities\":[{\"activity_state\":\"available\",\"authorization_state\":\"not-required\",\"enablement_state\":\"enabled\",\"exposure_state\":\"project-exposed\",\"id\":1,\"install_state\":\"installed\",\"kind\":\"local-cli\",\"name\":\"demo-local-formatter\",\"owner\":\"choicegate-public-demo\",\"promotion_state\":\"candidate-validated\",\"risk\":\"low\",\"source_state\":\"local-project\"}]}",
+        "path": "registry/capabilities.json",
+        "sha256": "b3d285c4a691ed9d8ef60ed372d6c4467d6cd4b0e48779a42a8dcd0a8754a6af"
+      },
+      {
+        "content_utf8": "{\"conflicts\":[]}",
+        "path": "registry/conflicts.json",
+        "sha256": "424d51165edd7dcd4dcc396d2efab3b1168fe1ba1ad88fea91124cad18d4e908"
+      },
+      {
+        "content_utf8": "{\"dependencies\":[]}",
+        "path": "registry/dependencies.json",
+        "sha256": "81059fe6210ccee4e3349c0f34c12d180f995150128a913d63b65b7937c6b152"
+      },
+      {
+        "content_utf8": "{\"preconditions\":[]}",
+        "path": "registry/preconditions.json",
+        "sha256": "9a78894a2ed7ea28136b0ff83d5a6e52a4b9e464a48b37d5648270d2b4735949"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo bundle.schema schema\"}",
+        "path": "registry/schemas/bundle.schema.json",
+        "sha256": "5b82a241dc6a8ab333638ee7a600495aa67cc53d6fa0faa8e022c33dd777ff68"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo capability.schema schema\"}",
+        "path": "registry/schemas/capability.schema.json",
+        "sha256": "0ffe27ee3a90c317bfbbe08607c8fd71a263772a94f477714c4e039bf3f239f9"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo conflict.schema schema\"}",
+        "path": "registry/schemas/conflict.schema.json",
+        "sha256": "10d4d93479196b67e85e7cf7c7ef1beb0715a1622ed5859b4598b83409efd0cc"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo dependency.schema schema\"}",
+        "path": "registry/schemas/dependency.schema.json",
+        "sha256": "caf36c45b7449e3c0942bf29bccf9d708955c54bace043835fdaf1e3cf60281c"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo precondition.schema schema\"}",
+        "path": "registry/schemas/precondition.schema.json",
+        "sha256": "5cbc91988c52464dd6898437b9a3ae69fdbfb92240f6c3540b7fc2d10de3e8fd"
+      },
+      {
+        "content_utf8": "{\"title\":\"Synthetic public demo supersession.schema schema\"}",
+        "path": "registry/schemas/supersession.schema.json",
+        "sha256": "40b6847dfd2b4cedcebd7572eccb1078b43e72a87a93f65c736f5fff6f049538"
+      },
+      {
+        "content_utf8": "{\"axes\":{\"activity_state\":[\"available\"],\"authorization_state\":[\"not-required\"],\"enablement_state\":[\"enabled\"],\"exposure_state\":[\"project-exposed\"],\"install_state\":[\"installed\"],\"promotion_state\":[\"candidate-validated\"],\"source_state\":[\"local-project\"]},\"model_id\":\"orthogonal-seven-axis-v1\"}",
+        "path": "registry/state-axes.json",
+        "sha256": "7735bf96ff48bd319b18418c23bf341cfe9f33d3f4dd183f95e0a5ad0a777b3a"
+      },
+      {
+        "content_utf8": "{\"supersessions\":[]}",
+        "path": "registry/supersessions.json",
+        "sha256": "836aa5c8f9fe90d7b0891346f70d89bd62c26d800d21151130482ad3092178d5"
+      }
+    ],
+    "manifest_algorithm": "sha256-path-hash-manifest-v1",
+    "manifest_fingerprint": "80963c6f548e4830a98e98c555a14546fb3e05c017765efda1a30680fc9f836f",
+    "registry_profile": "public-demo-v1",
+    "schema_version": 1,
+    "state_model_id": "orthogonal-seven-axis-v1"
+  },
+  "policy": {
+    "explicit_owner_approved_setup_paths": [],
+    "freshness_policy_id": "accepted-snapshot-explicit-v1",
+    "normal_ceiling": 8,
+    "policy_sha256": "4260fb0e4a20cf9a5c32365236a0c38f1e0cc13ca924d656c97823d62f81f326",
+    "policy_version": "choicegate-router-policy/v1"
+  },
+  "request_id": "public-full-router-demo",
+  "task": {
+    "allow_setup_choice": false,
+    "allowed_scope": {
+      "local_files_only": true,
+      "outward_messages": false,
+      "paid_actions": false,
+      "provider_configuration": false,
+      "provider_use": false,
+      "remote_actions": false,
+      "write_files": false
+    },
+    "authorization_required": false,
+    "explicit_browser_choice": false,
+    "fixture_id": "public-demo",
+    "fixture_scope": true,
+    "intrinsic_visual_testing": false,
+    "max_discoverable_capabilities": 1,
+    "preconditions": {},
+    "private_data_class": "public",
+    "requested_route_ids": [
+      "demo-local-formatter"
+    ],
+    "required_outcomes": [
+      "formatted-json"
+    ],
+    "risk_class": "low",
+    "selected_path_failed": false,
+    "surface": "local",
+    "task_class": "format-public-json"
+  }
+}

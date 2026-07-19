@@ -26,6 +26,10 @@ ROUTER_TEXT_HASH_ALGORITHM = "sha256-utf8-lf-v1"
 STATE_MODEL_ID = "orthogonal-seven-axis-v1"
 ACCEPTED_REGISTRY_COMMIT = "354046f9627c4a83a2a912e09a656d1871ed6cc4"
 ACCEPTED_INVENTORY_FINGERPRINT = "6ef1493691332e372106b652c991a4e9477c869d1a22e10af319845ae533198b"
+OWNER_REGISTRY_PROFILE = "owner-accepted"
+PUBLIC_DEMO_REGISTRY_PROFILE = "public-demo-v1"
+PUBLIC_DEMO_FIXTURE_ID = "public-demo"
+PUBLIC_DEMO_INVENTORY_FINGERPRINT = "80963c6f548e4830a98e98c555a14546fb3e05c017765efda1a30680fc9f836f"
 
 COMPONENT_PATHS = (
     "evals/choicegate/inventory-fixtures.json",
@@ -512,13 +516,28 @@ def validate_inventory_envelope(raw: Any) -> dict[str, Any]:
         "manifest_fingerprint",
         "components",
     )
-    exact_keys(value, fields, (), "inventory")
+    exact_keys(value, fields, ("registry_profile",), "inventory")
     inventory = copy.deepcopy(value)
     if inventory["schema_version"] != 1:
         raise ContractError("UNSUPPORTED_INVENTORY_SCHEMA", "inventory.schema_version must be 1")
-    require_string(inventory["accepted_registry_commit"], "inventory.accepted_registry_commit", GIT_COMMIT_RE)
-    if inventory["accepted_registry_commit"] != ACCEPTED_REGISTRY_COMMIT:
-        raise ContractError("INVENTORY_COMMIT_MISMATCH", "inventory commit is not the accepted registry commit")
+    registry_profile = inventory.get("registry_profile", OWNER_REGISTRY_PROFILE)
+    require_enum(
+        registry_profile,
+        {OWNER_REGISTRY_PROFILE, PUBLIC_DEMO_REGISTRY_PROFILE},
+        "inventory.registry_profile",
+    )
+    if registry_profile == OWNER_REGISTRY_PROFILE:
+        require_string(inventory["accepted_registry_commit"], "inventory.accepted_registry_commit", GIT_COMMIT_RE)
+        if inventory["accepted_registry_commit"] != ACCEPTED_REGISTRY_COMMIT:
+            raise ContractError("INVENTORY_COMMIT_MISMATCH", "inventory commit is not the accepted registry commit")
+        expected_fingerprint = ACCEPTED_INVENTORY_FINGERPRINT
+    else:
+        if inventory["accepted_registry_commit"] is not None:
+            raise ContractError(
+                "PUBLIC_DEMO_COMMIT_FORBIDDEN",
+                "the bundled synthetic registry must not claim a Git commit",
+            )
+        expected_fingerprint = PUBLIC_DEMO_INVENTORY_FINGERPRINT
     if inventory["state_model_id"] != STATE_MODEL_ID:
         raise ContractError("STATE_MODEL_MISMATCH", "inventory state model is not accepted")
     if inventory["manifest_algorithm"] != MANIFEST_ALGORITHM:
@@ -553,8 +572,12 @@ def validate_inventory_envelope(raw: Any) -> dict[str, Any]:
         )
     manifest = "".join(f"{path}\t{hashes[path]}\n" for path in sorted(hashes)).encode("utf-8")
     fingerprint = sha256_bytes(manifest)
-    if fingerprint != inventory["manifest_fingerprint"] or fingerprint != ACCEPTED_INVENTORY_FINGERPRINT:
-        raise ContractError("INVENTORY_FINGERPRINT_MISMATCH", "inventory fingerprint is not the accepted registry fingerprint", [fingerprint])
+    if fingerprint != inventory["manifest_fingerprint"] or fingerprint != expected_fingerprint:
+        raise ContractError(
+            "INVENTORY_FINGERPRINT_MISMATCH",
+            "inventory fingerprint is not accepted for its registry profile",
+            [fingerprint],
+        )
     inventory["parsed_components"] = parsed
     inventory["component_hashes"] = hashes
     return inventory
@@ -629,6 +652,14 @@ def validate_request(raw: Any) -> dict[str, Any]:
     request["task"] = validate_task(value["task"])
     request["candidate_evidence"] = candidates
     request["inventory"] = validate_inventory_envelope(value["inventory"])
+    if request["inventory"].get("registry_profile") == PUBLIC_DEMO_REGISTRY_PROFILE and (
+        request["task"]["fixture_scope"] is not True
+        or request["task"].get("fixture_id") != PUBLIC_DEMO_FIXTURE_ID
+    ):
+        raise ContractError(
+            "PUBLIC_DEMO_SCOPE_REQUIRED",
+            "the bundled synthetic registry is accepted only for the public-demo fixture",
+        )
     validate_evidence_references(candidates, request["inventory"])
     request["policy"] = validate_policy(value["policy"])
     if "prior_receipt" in request:
@@ -1501,7 +1532,7 @@ def normalized_task(task: dict[str, Any]) -> dict[str, Any]:
 
 def inventory_binding(request: dict[str, Any]) -> dict[str, Any]:
     inventory = request["inventory"]
-    return {
+    binding = {
         "accepted_registry_commit": inventory["accepted_registry_commit"],
         "state_model_id": inventory["state_model_id"],
         "manifest_algorithm": inventory["manifest_algorithm"],
@@ -1511,6 +1542,9 @@ def inventory_binding(request: dict[str, Any]) -> dict[str, Any]:
             for path in sorted(inventory["component_hashes"])
         ],
     }
+    if "registry_profile" in inventory:
+        binding["registry_profile"] = inventory["registry_profile"]
+    return binding
 
 
 def strict_utf8_text(path: Path) -> str:
@@ -1733,11 +1767,29 @@ def validate_prior_receipt_envelope(prior: dict[str, Any]) -> None:
     exact_keys(
         inventory,
         ("accepted_registry_commit", "state_model_id", "manifest_algorithm", "manifest_fingerprint", "component_hashes"),
-        (),
+        ("registry_profile",),
         "prior_receipt.inventory_binding",
     )
-    require_string(inventory["accepted_registry_commit"], "prior_receipt.inventory_binding.accepted_registry_commit", GIT_COMMIT_RE)
+    registry_profile = inventory.get("registry_profile", OWNER_REGISTRY_PROFILE)
+    require_enum(
+        registry_profile,
+        {OWNER_REGISTRY_PROFILE, PUBLIC_DEMO_REGISTRY_PROFILE},
+        "prior_receipt.inventory_binding.registry_profile",
+    )
+    if registry_profile == OWNER_REGISTRY_PROFILE:
+        require_string(inventory["accepted_registry_commit"], "prior_receipt.inventory_binding.accepted_registry_commit", GIT_COMMIT_RE)
+        if inventory["accepted_registry_commit"] != ACCEPTED_REGISTRY_COMMIT:
+            raise ContractError("HANDOFF_INVALID", "prior receipt registry commit is not accepted")
+    elif inventory["accepted_registry_commit"] is not None:
+        raise ContractError("HANDOFF_INVALID", "public demo prior receipt claims a Git commit")
     require_string(inventory["manifest_fingerprint"], "prior_receipt.inventory_binding.manifest_fingerprint", SHA256_RE)
+    expected_fingerprint = (
+        ACCEPTED_INVENTORY_FINGERPRINT
+        if registry_profile == OWNER_REGISTRY_PROFILE
+        else PUBLIC_DEMO_INVENTORY_FINGERPRINT
+    )
+    if inventory["manifest_fingerprint"] != expected_fingerprint:
+        raise ContractError("HANDOFF_INVALID", "prior receipt registry fingerprint is not accepted")
     if inventory["state_model_id"] != STATE_MODEL_ID or inventory["manifest_algorithm"] != MANIFEST_ALGORITHM:
         raise ContractError("HANDOFF_INVALID", "prior receipt inventory model or algorithm changed")
     component_hashes = require_list(inventory["component_hashes"], "prior_receipt.inventory_binding.component_hashes")
