@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-_No changes after the local 0.1.0 candidate._
+- Added Repository, Issues, and Changelog links to package metadata.
 
 ## [0.1.0] - candidate
 

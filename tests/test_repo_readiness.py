@@ -53,6 +53,11 @@ class RepoReadinessTests(unittest.TestCase):
         self.assertEqual(project["license"]["text"], "MIT")
         self.assertEqual(project["authors"], [{"name": "Rahul Krishna"}])
         self.assertIn("License :: OSI Approved :: MIT License", project["classifiers"])
+        self.assertEqual(project["urls"], {
+            "Repository": "https://gitlab.com/krahul02004/ChoiceGate",
+            "Issues": "https://gitlab.com/krahul02004/ChoiceGate/-/work_items",
+            "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
+        })
 
     def test_public_docs_preserve_closed_action_language(self) -> None:
         combined = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (

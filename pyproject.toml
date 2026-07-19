@@ -23,6 +23,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries",
 ]
 
+[project.urls]
+Repository = "https://gitlab.com/krahul02004/ChoiceGate"
+Issues = "https://gitlab.com/krahul02004/ChoiceGate/-/work_items"
+Changelog = "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md"
+
 [project.scripts]
 choicegate-dispatch = "choicegate.select_family_leaf:main"
 choicegate-route = "choicegate.route_capabilities:main"
