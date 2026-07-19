@@ -225,7 +225,7 @@ packaging metadata, and deterministic package contents:
 
 ```powershell
 python -B -m unittest discover -s tests -p "test_*.py"
-python -B -m py_compile scripts/*.py tools/*.py
+python -B -m compileall -q scripts tools
 ```
 
 A stronger maintainer suite additionally validates the router against the exact owner snapshot pinned in

@@ -5,6 +5,7 @@
 - Added Repository, Issues, and Changelog links to package metadata.
 - Added a hash-pinned synthetic public registry profile and self-contained request that exercise the
   complete router without claiming owner-registry authority or Git provenance.
+- Replaced shell-dependent wildcard compilation docs with a PowerShell-safe `compileall` command.
 
 ## [0.1.0] - 2026-07-18
 

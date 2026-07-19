@@ -6,7 +6,7 @@ Run from any checkout with Python 3.11 or newer:
 
 ```powershell
 python -B -m unittest discover -s tests -p "test_*.py"
-python -B -m py_compile scripts/*.py tools/*.py
+python -B -m compileall -q scripts tools
 ```
 
 This verifies the standalone family dispatcher, exact seven-skill ownership, trigger and near-miss

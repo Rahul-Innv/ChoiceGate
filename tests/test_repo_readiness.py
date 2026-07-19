@@ -63,14 +63,18 @@ class RepoReadinessTests(unittest.TestCase):
         self.assertNotIn("## [0.1.0] - candidate", changelog)
 
     def test_public_docs_preserve_closed_action_language(self) -> None:
-        combined = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (
+        doc_texts = [(ROOT / relative).read_text(encoding="utf-8") for relative in (
             "README.md", "ROADMAP.md", "docs/public/ARCHITECTURE.md", "docs/public/VALIDATION.md"
-        )).lower()
+        )]
+        combined = "\n".join(doc_texts).lower()
         for phrase in ("self-hosted marketplace", "capability registry", "selection is never execution", "fails closed"):
             self.assertIn(phrase, combined)
         canonical = "gitlab.com/krahul02004/choicegate"
         self.assertIn(canonical, combined)
         self.assertEqual(combined.count("gitlab.com/"), combined.count(canonical))
+        for text in (doc_texts[0], doc_texts[3]):
+            self.assertIn("python -B -m compileall -q scripts tools", text)
+            self.assertNotIn("python -B -m py_compile scripts/*.py tools/*.py", text)
 
     def test_every_json_file_is_strict_utf8_and_parses(self) -> None:
         for path in ROOT.rglob("*.json"):
