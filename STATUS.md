@@ -1,7 +1,9 @@
 # Project status
 
-`choicegate` 0.2.0, alpha, prepared locally and built by Rahul Krishna; PyPI still serves 0.1.0.
-The portable test suite (23 tests) and the GitLab pipeline pass offline from a bare checkout,
+`choicegate` 0.2.1, alpha, built by Rahul Krishna. Current publication and source provenance are
+reported by the [PyPI project](https://pypi.org/project/choicegate/) and
+[GitLab Releases](https://gitlab.com/krahul02004/ChoiceGate/-/releases) pages. The portable test
+suite (24 tests) and the GitLab pipeline pass offline from a bare checkout,
 including a full-router replay against a
 hash-pinned synthetic registry. A stronger suite replays the router against the
 exact owner-accepted capability-registry snapshot pinned in `references/routing-contract.md`; that
@@ -33,8 +35,8 @@ names.
 
 ## What installing the package does not claim
 
-Version 0.1.0 is published on PyPI as
-[`choicegate`](https://pypi.org/project/choicegate/). Installing it is not a marketplace entry, an
+Published versions are available on PyPI as
+[`choicegate`](https://pypi.org/project/choicegate/). Installing one is not a marketplace entry, an
 activation, or a lifecycle claim: lifecycle eligibility and routing priority remain owned by the
 external capability registry, and ChoiceGate binds to one owner-accepted snapshot of that registry
 by content hash without ever mutating it. Building the Claude Code and Codex surface packages

@@ -49,6 +49,8 @@ def _metadata_text() -> str:
             lines.append("Keywords: " + ",".join(keyword_list))
     for classifier in project.get("classifiers", ()):
         lines.append(f"Classifier: {classifier}")
+    for label, url in sorted(project.get("urls", {}).items()):
+        lines.append(f"Project-URL: {label}, {url}")
     lines.append(f"Requires-Python: {project['requires-python']}")
     lines.append("Description-Content-Type: text/markdown")
     readme = (ROOT / project["readme"]).read_text(encoding="utf-8")

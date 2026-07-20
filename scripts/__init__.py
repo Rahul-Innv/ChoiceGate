@@ -13,4 +13,4 @@ Modules:
 from __future__ import annotations
 
 __all__ = ["rank_candidates", "route_capabilities", "select_family_leaf"]
-__version__ = "0.2.0"
+__version__ = "0.2.1"

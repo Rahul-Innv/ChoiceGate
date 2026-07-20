@@ -5,7 +5,7 @@ backend-path = ["tools"]
 
 [project]
 name = "choicegate"
-version = "0.2.0"
+version = "0.2.1"
 description = "Deterministic capability-selection gate: select one safe, evidence-bound capability path or fail closed."
 readme = "README.md"
 requires-python = ">=3.11"
