@@ -11,6 +11,9 @@
 
 ## [0.1.0] - 2026-07-18
 
+Version 0.1.0 is published on PyPI. No matching Git tag or GitLab Release provenance is
+claimed; package publication does not grant installation, activation, or registry authority.
+
 ### Added
 
 - Added one dispatch-only ChoiceGate router and six single-outcome capability-selection leaves.
@@ -24,5 +27,6 @@
 
 ### Safety
 
-- Kept every provider, marketplace, registry, installation, lifecycle, remote, host, publication,
-  tag, release, archive, and deletion action closed.
+- Kept every provider, marketplace, registry, installation, lifecycle, execution, host-settings,
+  tag, GitLab Release, archive, and deletion action closed in the source lane. The separately
+  recorded PyPI publication did not widen those boundaries.

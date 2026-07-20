@@ -255,7 +255,7 @@ project will never take is in [STATUS.md](STATUS.md).
 
 ChoiceGate is available under the [MIT License](LICENSE). Contributions follow
 [CONTRIBUTING.md](CONTRIBUTING.md), the [Code of Conduct](CODE_OF_CONDUCT.md), and
-[private security reporting guidance](SECURITY.md). Planned work and public-launch gates are in
+[private security reporting guidance](SECURITY.md). Planned work and next-release gates are in
 [ROADMAP.md](ROADMAP.md).
 
 Built by Rahul Krishna.

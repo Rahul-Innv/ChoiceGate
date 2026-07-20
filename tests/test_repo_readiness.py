@@ -60,7 +60,14 @@ class RepoReadinessTests(unittest.TestCase):
         })
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
         self.assertIn("## [0.1.0] - 2026-07-18", changelog)
+        self.assertIn("Version 0.1.0 is published on PyPI", changelog)
+        self.assertIn("No matching Git tag or GitLab Release provenance is\nclaimed", changelog)
         self.assertNotIn("## [0.1.0] - candidate", changelog)
+        self.assertNotIn("remote, host, publication,\n  tag, release", changelog)
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertIn("## Next-release gate", roadmap)
+        self.assertIn("Publish no new marketplace or package artifact", roadmap)
+        self.assertNotIn("## Public-launch gate", roadmap)
 
     def test_public_docs_preserve_closed_action_language(self) -> None:
         doc_texts = [(ROOT / relative).read_text(encoding="utf-8") for relative in (

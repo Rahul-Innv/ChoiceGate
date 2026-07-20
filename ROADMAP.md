@@ -26,9 +26,11 @@ accepted external capability registry remains the lifecycle and priority authori
 - [ ] Run provider-backed trigger evaluation only after a separate provider approval.
 - [ ] Consider surface-specific installation adapters only after separate qualification.
 
-## Public-launch gate
+## Next-release gate
 
 - [ ] Recheck privacy, licenses, dependencies, package contents, and README/demo claims.
-- [ ] Decide and approve tag, host Release, description, topics, avatar, visibility, and verification.
+- [ ] Select a version newer than the published 0.1.0, then decide and approve its tag, GitLab
+  Release, any settings changes, and post-release verification.
 - [ ] Activate or promote skills only through a separate registry lifecycle decision.
-- [ ] Publish no marketplace or package artifact without a new exact owner approval.
+- [ ] Publish no new marketplace or package artifact without a newer committed version and a new
+  exact owner approval.
