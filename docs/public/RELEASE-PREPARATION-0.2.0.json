@@ -1,8 +1,8 @@
 {
   "receipt_version": "releasebench.release-preparation/v1",
   "repository": "ChoiceGate",
-  "base_commit": "dfc5c23ea06e363327b7979f8d99bb097c72e026",
-  "branch": "release/v0.2.0-prep",
+  "base_commit": "e4da6203c5910bd50b35dd1241a6f05b3a1339e9",
+  "branch": "release/v0.2.0-wheel-bindings",
   "selected_version": "0.2.0",
   "semver_change": "MINOR",
   "semver_evidence": [
@@ -11,33 +11,31 @@
     "The existing 0.x command names remain available; no 1.0 stability claim is made."
   ],
   "local_diff": [
-    ".claude-plugin/marketplace.json",
-    ".claude-plugin/plugin.json",
-    ".codex-plugin/plugin.json",
     "CHANGELOG.md",
-    "README.md",
-    "ROADMAP.md",
-    "SECURITY.md",
-    "STATUS.md",
-    "VERSION",
     "docs/public/RELEASE-PREPARATION-0.2.0.json",
-    "packaging/surface-package.json",
     "pyproject.toml",
-    "scripts/__init__.py",
-    "tests/test_repo_readiness.py"
+    "scripts/route_capabilities.py",
+    "tests/test_repo_readiness.py",
+    "tools/choicegate_backend.py"
   ],
   "test_evidence": [
-    "python -B -m unittest discover -s tests -p test_*.py: PASS (23 tests)",
+    "python -B -m unittest discover -s tests -p test_*.py: PASS (24 tests)",
     "python -B -m compileall -q scripts tools: PASS",
     "python -B tools/build_public_route_demo.py --check: PASS",
-    "two deterministic Python package builds: PASS",
+    "two deterministic Python package builds: PASS (wheel and sdist SHA-256 match across builds)",
     "python -B -m twine check: PASS (wheel and sdist)",
+    "installed wheel choicegate-route sample: PASS (demo-local-formatter, public-demo-v1, null accepted registry commit)",
     "two deterministic surface-package builds: PASS",
     "git diff --check: PASS"
   ],
+  "release_blocker_discovered": {
+    "reproduction": "The 0.2.0 wheel built from e4da6203c5910bd50b35dd1241a6f05b3a1339e9 failed choicegate-route with ROUTER_BINDING_MISSING because route-request.schema.json was absent from the installed layout.",
+    "correction": "Package both router schemas beneath choicegate/schemas, resolve source and installed schema roots fail-closed, and exercise router_binding against an extracted wheel in the portable test suite.",
+    "remote_state": "No v0.2.0 tag, GitLab Release, or PyPI 0.2.0 artifact was published."
+  },
   "compare_link_policy": "No 0.1.0-to-0.2.0 compare link: no matching 0.1.0 source tag exists.",
   "closed_actions": {
-    "local_tag": "not created",
+    "local_tag": "stale unpublished v0.2.0 remains at e4da6203c5910bd50b35dd1241a6f05b3a1339e9 and must be recreated only after the corrective MR merges",
     "tag_push": "not performed",
     "gitlab_release": "not created",
     "pypi_publication": "not performed",

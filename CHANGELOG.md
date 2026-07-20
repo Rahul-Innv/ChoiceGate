@@ -13,6 +13,8 @@ path without weakening or exposing the separate owner-registry authority boundar
 - Replaced shell-dependent wildcard compilation docs with a PowerShell-safe `compileall` command.
 - Aligned all request, prior-receipt, and decision-receipt registry-profile schemas with runtime:
   explicit and legacy owner profiles require a Git commit; the synthetic demo requires null.
+- Packaged the router's two schema bindings and made binding resolution portable across source and
+  installed-wheel layouts, with a wheel-layout regression that prevents missing runtime data.
 - Reconciled current-facing launch and release-gate documentation with the public GitLab project
   and published PyPI 0.1.0 baseline without inventing a matching source tag or GitLab Release.
 

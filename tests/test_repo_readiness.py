@@ -16,6 +16,13 @@ SPEC = importlib.util.spec_from_file_location("choicegate_package_builder", BUIL
 assert SPEC is not None and SPEC.loader is not None
 BUILDER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(BUILDER)
+PYTHON_BACKEND_PATH = ROOT / "tools" / "choicegate_backend.py"
+PYTHON_BACKEND_SPEC = importlib.util.spec_from_file_location(
+    "choicegate_python_backend", PYTHON_BACKEND_PATH
+)
+assert PYTHON_BACKEND_SPEC is not None and PYTHON_BACKEND_SPEC.loader is not None
+PYTHON_BACKEND = importlib.util.module_from_spec(PYTHON_BACKEND_SPEC)
+PYTHON_BACKEND_SPEC.loader.exec_module(PYTHON_BACKEND)
 
 
 class RepoReadinessTests(unittest.TestCase):
@@ -111,6 +118,43 @@ class RepoReadinessTests(unittest.TestCase):
                 self.assertTrue(any(name.startswith("skills/choicegate") for name in names))
                 self.assertFalse(any(name.startswith((".git/", "dist/", "evals/", "tests/")) for name in names))
                 self.assertFalse(any("__pycache__" in name or name.endswith((".pyc", ".pyo")) for name in names))
+
+    def test_python_wheel_preserves_router_binding_in_installed_layout(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            wheel_name = PYTHON_BACKEND.build_wheel(temp)
+            wheel_path = Path(temp) / wheel_name
+            installed = Path(temp) / "installed"
+            with zipfile.ZipFile(wheel_path) as archive:
+                names = set(archive.namelist())
+                self.assertIn("choicegate/schemas/route-request.schema.json", names)
+                self.assertIn("choicegate/schemas/decision-receipt.schema.json", names)
+                archive.extractall(installed)
+
+            route_path = installed / "choicegate" / "route_capabilities.py"
+            route_spec = importlib.util.spec_from_file_location(
+                "choicegate_installed_route_regression", route_path
+            )
+            assert route_spec is not None and route_spec.loader is not None
+            route_module = importlib.util.module_from_spec(route_spec)
+            route_spec.loader.exec_module(route_module)
+            binding = route_module.router_binding(
+                "a" * 40,
+                {"policy_version": route_module.POLICY_VERSION, "policy_sha256": "b" * 64},
+            )
+            self.assertEqual(binding["choicegate_commit"], "a" * 40)
+            self.assertEqual(binding["router_policy_sha256"], "b" * 64)
+            self.assertEqual(
+                binding["request_schema_sha256"],
+                route_module.canonical_text_sha256(
+                    installed / "choicegate" / "schemas" / "route-request.schema.json"
+                ),
+            )
+            self.assertEqual(
+                binding["receipt_schema_sha256"],
+                route_module.canonical_text_sha256(
+                    installed / "choicegate" / "schemas" / "decision-receipt.schema.json"
+                ),
+            )
 
     def test_gitlab_ci_contains_only_local_validation_commands(self) -> None:
         text = (ROOT / ".gitlab-ci.yml").read_text(encoding="utf-8").lower()

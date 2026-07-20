@@ -90,7 +90,18 @@ def _package_files() -> list[tuple[str, Path]]:
     pairs: list[tuple[str, Path]] = []
     for path in sorted(source.glob("*.py")):
         pairs.append((f"{package}/{path.name}", path))
-    return pairs
+    for relative in tool.get("package-data", ()):
+        package_path = PurePosixPath(relative)
+        if package_path.is_absolute() or ".." in package_path.parts:
+            raise ValueError(f"unsafe package-data path: {relative}")
+        data_source = ROOT.joinpath(*package_path.parts)
+        if not data_source.is_file():
+            raise FileNotFoundError(f"package-data entry is missing: {relative}")
+        pairs.append((f"{package}/{package_path.as_posix()}", data_source))
+    wheel_paths = [wheel_path for wheel_path, _ in pairs]
+    if len(wheel_paths) != len(set(wheel_paths)):
+        raise ValueError("duplicate wheel path in package files")
+    return sorted(pairs)
 
 
 def _record_hash(data: bytes) -> str:

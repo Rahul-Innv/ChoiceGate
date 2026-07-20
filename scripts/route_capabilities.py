@@ -1566,10 +1566,24 @@ def canonical_text_sha256(path: Path) -> str:
 def router_binding(choicegate_commit: str, policy: dict[str, Any]) -> dict[str, Any]:
     if GIT_COMMIT_RE.fullmatch(choicegate_commit) is None:
         raise ContractError("INVALID_ROUTER_BINDING", "--choicegate-commit must be a 40-character lowercase Git commit")
-    skill_root = Path(__file__).resolve().parent.parent
-    request_schema = skill_root / "schemas" / "route-request.schema.json"
-    receipt_schema = skill_root / "schemas" / "decision-receipt.schema.json"
-    helper = skill_root / "scripts" / "rank_candidates.py"
+    module_root = Path(__file__).resolve().parent
+    schema_roots = (module_root.parent / "schemas", module_root / "schemas")
+    schema_binding = next(
+        (
+            (root / "route-request.schema.json", root / "decision-receipt.schema.json")
+            for root in schema_roots
+            if (root / "route-request.schema.json").is_file()
+            and (root / "decision-receipt.schema.json").is_file()
+        ),
+        None,
+    )
+    if schema_binding is None:
+        raise ContractError(
+            "ROUTER_BINDING_MISSING",
+            "router binding files are missing: route-request.schema.json, decision-receipt.schema.json",
+        )
+    request_schema, receipt_schema = schema_binding
+    helper = module_root / "rank_candidates.py"
     for path in (request_schema, receipt_schema, helper):
         if not path.is_file():
             raise ContractError("ROUTER_BINDING_MISSING", f"router binding file is missing: {path.name}")
