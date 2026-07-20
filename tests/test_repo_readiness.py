@@ -32,7 +32,7 @@ class RepoReadinessTests(unittest.TestCase):
 
     def test_family_plugin_metadata_is_exact(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "0.1.0")
+        self.assertEqual(version, "0.2.0")
         for relative in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json"):
             manifest = json.loads((ROOT / relative).read_text(encoding="utf-8"))
             self.assertEqual(manifest["name"], "choicegate")
@@ -59,6 +59,9 @@ class RepoReadinessTests(unittest.TestCase):
             "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
         })
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## [Unreleased]\n\n## [0.2.0] - 2026-07-19", changelog)
+        self.assertIn("No version compare link is recorded for 0.2.0", changelog)
+        self.assertNotIn("compare/v0.1.0...v0.2.0", changelog)
         self.assertIn("## [0.1.0] - 2026-07-18", changelog)
         self.assertIn("Version 0.1.0 is published on PyPI", changelog)
         self.assertIn("No matching Git tag or GitLab Release provenance is\nclaimed", changelog)

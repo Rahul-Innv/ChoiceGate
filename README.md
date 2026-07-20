@@ -247,8 +247,9 @@ deterministic and offline via the in-tree backend `tools/choicegate_backend.py`;
 
 ## Status
 
-`0.1.0`, alpha, on PyPI. The portable 23-test suite and CI pass offline, including the synthetic
-full-router profile; the owner-registry replay remains maintainer-only. Selection is never execution; the full list of actions this
+`0.2.0`, alpha, prepared locally; PyPI still serves `0.1.0`. The portable 23-test suite and CI pass
+offline, including the synthetic full-router profile; the owner-registry replay remains
+maintainer-only. Selection is never execution; the full list of actions this
 project will never take is in [STATUS.md](STATUS.md).
 
 ## Governance

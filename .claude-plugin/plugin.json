@@ -1,7 +1,7 @@
 {
   "name": "choicegate",
   "displayName": "ChoiceGate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Packages ChoiceGate's seven atomic capability-selection skills.",
   "author": {
     "name": "Rahul Krishna"
