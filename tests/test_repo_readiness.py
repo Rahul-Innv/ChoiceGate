@@ -53,16 +53,35 @@ class RepoReadinessTests(unittest.TestCase):
         self.assertEqual(project["license"]["text"], "MIT")
         self.assertEqual(project["authors"], [{"name": "Rahul Krishna"}])
         self.assertIn("License :: OSI Approved :: MIT License", project["classifiers"])
+        self.assertEqual(project["urls"], {
+            "Repository": "https://gitlab.com/krahul02004/ChoiceGate",
+            "Issues": "https://gitlab.com/krahul02004/ChoiceGate/-/work_items",
+            "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
+        })
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## [0.1.0] - 2026-07-18", changelog)
+        self.assertIn("Version 0.1.0 is published on PyPI", changelog)
+        self.assertIn("No matching Git tag or GitLab Release provenance is\nclaimed", changelog)
+        self.assertNotIn("## [0.1.0] - candidate", changelog)
+        self.assertNotIn("remote, host, publication,\n  tag, release", changelog)
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertIn("## Next-release gate", roadmap)
+        self.assertIn("Publish no new marketplace or package artifact", roadmap)
+        self.assertNotIn("## Public-launch gate", roadmap)
 
     def test_public_docs_preserve_closed_action_language(self) -> None:
-        combined = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (
+        doc_texts = [(ROOT / relative).read_text(encoding="utf-8") for relative in (
             "README.md", "ROADMAP.md", "docs/public/ARCHITECTURE.md", "docs/public/VALIDATION.md"
-        )).lower()
+        )]
+        combined = "\n".join(doc_texts).lower()
         for phrase in ("self-hosted marketplace", "capability registry", "selection is never execution", "fails closed"):
             self.assertIn(phrase, combined)
         canonical = "gitlab.com/krahul02004/choicegate"
         self.assertIn(canonical, combined)
         self.assertEqual(combined.count("gitlab.com/"), combined.count(canonical))
+        for text in (doc_texts[0], doc_texts[3]):
+            self.assertIn("python -B -m compileall -q scripts tools", text)
+            self.assertNotIn("python -B -m py_compile scripts/*.py tools/*.py", text)
 
     def test_every_json_file_is_strict_utf8_and_parses(self) -> None:
         for path in ROOT.rglob("*.json"):

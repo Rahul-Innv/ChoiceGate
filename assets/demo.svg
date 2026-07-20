@@ -7,7 +7,7 @@
   <circle cx="98" cy="72" r="8" fill="#fbbf24"/>
   <circle cx="124" cy="72" r="8" fill="#34d399"/>
   <text x="68" y="124" fill="#94a3b8" font-family="Consolas, monospace" font-size="18">PS&gt; python -B -m unittest discover -s tests -p "test_*.py"</text>
-  <text x="68" y="170" fill="#e2e8f0" font-family="Consolas, monospace" font-size="20">Ran 21 tests in 16.814s</text>
+  <text x="68" y="170" fill="#e2e8f0" font-family="Consolas, monospace" font-size="20">Ran 23 tests (offline)</text>
   <text x="68" y="210" fill="#34d399" font-family="Consolas, monospace" font-size="22">OK</text>
   <line x1="68" y1="246" x2="972" y2="246" stroke="#334155" stroke-width="2"/>
   <text x="68" y="294" fill="#60a5fa" font-family="Consolas, monospace" font-size="20">decision.route_type = "atomic-leaf"</text>

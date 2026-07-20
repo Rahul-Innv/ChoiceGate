@@ -1,7 +1,8 @@
 # Project status
 
-`choicegate` 0.1.0, alpha, built by Rahul Krishna. The portable test suite (21 tests) and the
-GitLab pipeline pass offline from a bare checkout. A stronger suite replays the router against the
+`choicegate` 0.1.0, alpha, built by Rahul Krishna. The portable test suite (23 tests) and the
+GitLab pipeline pass offline from a bare checkout, including a full-router replay against a
+hash-pinned synthetic registry. A stronger suite replays the router against the
 exact owner-accepted capability-registry snapshot pinned in `references/routing-contract.md`; that
 snapshot is not part of this repository, so the stronger suite runs only in the maintainer's
 environment. See [docs/public/VALIDATION.md](docs/public/VALIDATION.md) for both gates.

@@ -10,6 +10,7 @@ accepted external capability registry remains the lifecycle and priority authori
 - [x] Share one neutral routing core across Claude Code and Codex adapters.
 - [x] Cover positive triggers, near misses, pairwise collisions, malformed input, and strict JSON.
 - [x] Bind routing to owner-accepted registry lifecycle and priority evidence by content hash.
+- [x] Ship a fixture-scoped, hash-pinned synthetic registry that reproduces the complete router path.
 
 ## Release readiness
 
@@ -20,14 +21,16 @@ accepted external capability registry remains the lifecycle and priority authori
 
 ## Later roadmap
 
-- [ ] Add a portable, authority-preserving fixture strategy for the full authority-bound suite.
+- [x] Add a portable synthetic fixture without weakening or impersonating owner authority.
 - [ ] Make ReleaseBench's generic audit natively recognize GitLab governance paths.
 - [ ] Run provider-backed trigger evaluation only after a separate provider approval.
 - [ ] Consider surface-specific installation adapters only after separate qualification.
 
-## Public-launch gate
+## Next-release gate
 
 - [ ] Recheck privacy, licenses, dependencies, package contents, and README/demo claims.
-- [ ] Decide and approve tag, host Release, description, topics, avatar, visibility, and verification.
+- [ ] Select a version newer than the published 0.1.0, then decide and approve its tag, GitLab
+  Release, any settings changes, and post-release verification.
 - [ ] Activate or promote skills only through a separate registry lifecycle decision.
-- [ ] Publish no marketplace or package artifact without a new exact owner approval.
+- [ ] Publish no new marketplace or package artifact without a newer committed version and a new
+  exact owner approval.

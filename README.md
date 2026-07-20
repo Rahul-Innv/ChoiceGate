@@ -166,6 +166,25 @@ Actual output, trimmed:
 }
 ```
 
+### Exercise the full router
+
+The bundled `sample-route-request.json` embeds a 16-component synthetic registry profile and one
+public-data candidate. It exercises the same inventory hashing, schema, lifecycle, exclusion,
+ranking, and receipt path as an owner registry without publishing or pretending to reproduce the
+owner's private snapshot:
+
+```powershell
+$choicegateCommit = git rev-parse HEAD
+python -B scripts/route_capabilities.py evals/choicegate/sample-route-request.json `
+  --choicegate-commit $choicegateCommit | python -m json.tool
+```
+
+The receipt selects `demo-local-formatter` as an executable atomic route, identifies
+`registry_profile` as `public-demo-v1`, and records `accepted_registry_commit` as `null` because the
+synthetic profile makes no Git provenance claim. Change any embedded component byte or use the demo
+profile outside its fixed fixture scope and the router fails closed. Selection still does not run
+the formatter or authorize any outward action.
+
 ## How it works
 
 ChoiceGate is a family of seven small skills sharing one routing core. The first is a dispatcher
@@ -187,8 +206,9 @@ dispatcher you ran above; it needs nothing but the request. `scripts/route_capab
 (`choicegate-route`) is the full router: it takes frozen candidate evidence and judges it against a
 capability registry (a separate, owner-maintained catalog of which capabilities exist and whether
 they are installed, enabled, and authorized) that ChoiceGate pins by content hash so a decision
-can never rest on a catalog that has silently changed; the registry snapshot itself is not in this
-repository, and the bundled sample request above lets you try the gate without it. Strict JSON
+can never rest on a catalog that has silently changed. The owner snapshot itself is not in this
+repository. The separately pinned synthetic profile above makes the complete router path publicly
+reproducible without claiming owner authority. Strict JSON
 (duplicate keys rejected), exact schemas, and canonical hashing apply to both programs, so every
 receipt is reproducible byte for byte.
 
@@ -205,10 +225,10 @@ packaging metadata, and deterministic package contents:
 
 ```powershell
 python -B -m unittest discover -s tests -p "test_*.py"
-python -B -m py_compile scripts/*.py tools/*.py
+python -B -m compileall -q scripts tools
 ```
 
-A stronger suite validates the router against the exact registry snapshot pinned in
+A stronger maintainer suite additionally validates the router against the exact owner snapshot pinned in
 `references/routing-contract.md`; see [docs/public/VALIDATION.md](docs/public/VALIDATION.md) and
 [docs/public/ARCHITECTURE.md](docs/public/ARCHITECTURE.md).
 
@@ -227,15 +247,15 @@ deterministic and offline via the in-tree backend `tools/choicegate_backend.py`;
 
 ## Status
 
-`0.1.0`, alpha, on PyPI. The portable 21-test suite and CI pass offline; the registry-bound suite
-runs in the maintainer's environment. Selection is never execution; the full list of actions this
+`0.1.0`, alpha, on PyPI. The portable 23-test suite and CI pass offline, including the synthetic
+full-router profile; the owner-registry replay remains maintainer-only. Selection is never execution; the full list of actions this
 project will never take is in [STATUS.md](STATUS.md).
 
 ## Governance
 
 ChoiceGate is available under the [MIT License](LICENSE). Contributions follow
 [CONTRIBUTING.md](CONTRIBUTING.md), the [Code of Conduct](CODE_OF_CONDUCT.md), and
-[private security reporting guidance](SECURITY.md). Planned work and public-launch gates are in
+[private security reporting guidance](SECURITY.md). Planned work and next-release gates are in
 [ROADMAP.md](ROADMAP.md).
 
 Built by Rahul Krishna.

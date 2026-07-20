@@ -4,7 +4,7 @@ ChoiceGate selects one evidence-backed atomic capability, one registry-approved 
 
 ## Accepted authority binding
 
-Version 1 accepts only one owner-accepted snapshot of an external capability registry as its lifecycle and routing-priority authority:
+Version 1 accepts one owner-accepted snapshot of an external capability registry as its lifecycle and routing-priority authority:
 
 - commit: `354046f9627c4a83a2a912e09a656d1871ed6cc4`
 - tree: `786171bc52fe6efeefb860f01bb71d4c09ed3504`
@@ -13,6 +13,14 @@ Version 1 accepts only one owner-accepted snapshot of an external capability reg
 - `registry/system.json` SHA-256: `1f89dd859977fa3616914d82e74280be49c927865f1bb96cf8bfe4a18800bc87`
 - state model: `orthogonal-seven-axis-v1`
 - manifest algorithm: `sha256-path-hash-manifest-v1`
+
+For public reproducibility, the same request version also accepts one separately pinned
+`public-demo-v1` profile with fingerprint
+`80963c6f548e4830a98e98c555a14546fb3e05c017765efda1a30680fc9f836f`. The demo is accepted only
+with fixture ID `public-demo`; its `accepted_registry_commit` must be `null` so synthetic data cannot
+claim Git provenance. It exercises the full router but grants no owner lifecycle authority. The
+owner profile still requires the exact commit and fingerprint above, and a null commit without the
+demo profile fails closed.
 
 The request must embed the exact bytes and SHA-256 digest of every declared component. The router accepts exactly these sixteen paths:
 
@@ -87,7 +95,8 @@ After exclusions, deterministic selection prefers exact task-class match, more r
 The strict receipt schema is [decision-receipt.schema.json](../schemas/decision-receipt.schema.json), schema ID `choicegate.decision-receipt/v1`. A receipt binds:
 
 - canonical request SHA-256;
-- accepted inventory commit, fingerprint, and all component hashes;
+- registry profile, accepted inventory commit (null only for the synthetic public demo), fingerprint,
+  and all component hashes;
 - ChoiceGate commit, router and policy versions, policy hash, both schema hashes, router source hash, legacy helper hash, and the router-text hash algorithm;
 - normalized task, decision, candidate accounting with a canonical candidate-evidence hash, bundle membership, approvals, fallback, discovery status, reselection triggers, and prohibited actions;
 - canonical receipt SHA-256.
