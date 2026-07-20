@@ -39,7 +39,7 @@ class RepoReadinessTests(unittest.TestCase):
 
     def test_family_plugin_metadata_is_exact(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "0.2.0")
+        self.assertEqual(version, "0.2.1")
         for relative in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json"):
             manifest = json.loads((ROOT / relative).read_text(encoding="utf-8"))
             self.assertEqual(manifest["name"], "choicegate")
@@ -66,7 +66,8 @@ class RepoReadinessTests(unittest.TestCase):
             "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
         })
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        self.assertIn("## [Unreleased]\n\n## [0.2.0] - 2026-07-19", changelog)
+        self.assertIn("## [Unreleased]\n\n## [0.2.1] - 2026-07-20", changelog)
+        self.assertIn("omitted the declared Project-URL fields", changelog)
         self.assertIn("No version compare link is recorded for 0.2.0", changelog)
         self.assertNotIn("compare/v0.1.0...v0.2.0", changelog)
         self.assertIn("## [0.1.0] - 2026-07-18", changelog)
@@ -75,7 +76,7 @@ class RepoReadinessTests(unittest.TestCase):
         self.assertNotIn("## [0.1.0] - candidate", changelog)
         self.assertNotIn("remote, host, publication,\n  tag, release", changelog)
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
-        self.assertIn("## Next-release gate", roadmap)
+        self.assertIn("## Release discipline", roadmap)
         self.assertIn("Publish no new marketplace or package artifact", roadmap)
         self.assertNotIn("## Public-launch gate", roadmap)
 
@@ -128,6 +129,14 @@ class RepoReadinessTests(unittest.TestCase):
                 names = set(archive.namelist())
                 self.assertIn("choicegate/schemas/route-request.schema.json", names)
                 self.assertIn("choicegate/schemas/decision-receipt.schema.json", names)
+                metadata_name = next(name for name in names if name.endswith(".dist-info/METADATA"))
+                metadata = archive.read(metadata_name).decode("utf-8")
+                for label, url in {
+                    "Repository": "https://gitlab.com/krahul02004/ChoiceGate",
+                    "Issues": "https://gitlab.com/krahul02004/ChoiceGate/-/work_items",
+                    "Changelog": "https://gitlab.com/krahul02004/ChoiceGate/-/blob/main/CHANGELOG.md",
+                }.items():
+                    self.assertIn(f"Project-URL: {label}, {url}\n", metadata)
                 archive.extractall(installed)
 
             route_path = installed / "choicegate" / "route_capabilities.py"

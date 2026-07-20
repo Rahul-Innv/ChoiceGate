@@ -10,7 +10,7 @@
       "source": ".",
       "displayName": "ChoiceGate",
       "description": "Packages ChoiceGate's seven atomic capability-selection skills; selects one safe, evidence-bound path and returns a deterministic receipt without executing, installing, or configuring it.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "license": "MIT",
       "category": "productivity"
     }

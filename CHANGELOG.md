@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-20
+
+Patch release correcting Python distribution metadata. The custom deterministic
+backend used for 0.2.0 omitted the declared Project-URL fields even though they
+were present in `pyproject.toml`.
+
+- Emit Repository, Issues, and Changelog as Core Metadata `Project-URL` headers.
+- Inspect the built wheel's `METADATA` in the portable regression suite so the
+  published project links cannot silently disappear again.
+- Replace volatile prerelease status wording with links to the authoritative
+  GitLab Releases and PyPI pages.
+
 ## [0.2.0] - 2026-07-19
 
 Minor release preparation: the full router now has a public, deterministic execution

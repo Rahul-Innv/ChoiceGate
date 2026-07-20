@@ -17,7 +17,8 @@ accepted external capability registry remains the lifecycle and priority authori
 - [x] Add family-level `choicegate` plugin manifests and local governance.
 - [x] Add a truthful README, architecture, demo, safety boundaries, and portable checks.
 - [x] Package the routing core as a deterministic, offline `choicegate` distribution.
-- [ ] Publish host-backed CI proof from the release commit.
+- [x] Publish host-backed CI proof from a release commit.
+- [x] Verify declared project URLs in the built wheel metadata.
 
 ## Later roadmap
 
@@ -26,11 +27,11 @@ accepted external capability registry remains the lifecycle and priority authori
 - [ ] Run provider-backed trigger evaluation only after a separate provider approval.
 - [ ] Consider surface-specific installation adapters only after separate qualification.
 
-## Next-release gate
+## Release discipline
 
-- [ ] Recheck privacy, licenses, dependencies, package contents, and README/demo claims.
-- [x] Select and commit 0.2.0, a minor release for the new public full-router profile.
-- [ ] After merge and exact-head verification, separately decide and approve its tag, GitLab
-  Release, package publication, any settings changes, and post-release verification.
-- [ ] Activate or promote skills only through a separate registry lifecycle decision.
-- [ ] Publish no new marketplace or package artifact without a new exact owner approval.
+- Recheck privacy, licenses, dependencies, package contents, and README/demo claims for each version.
+- Verify exact-head and exact-main CI before creating an annotated tag or GitLab Release.
+- Inspect the installed wheel, including runtime data bindings and Core Metadata, before publication.
+- Treat package publication, settings changes, activation, and promotion as separate owner decisions.
+- Publish no new marketplace or package artifact without a new exact owner approval.
+- Activate or promote skills only through the external registry lifecycle authority.
