@@ -38,6 +38,12 @@ choicegate-rank = "choicegate.rank_candidates:main"
 # "choicegate" package (equivalent to a package-dir {"choicegate": "scripts"}).
 package = "choicegate"
 package-source = "scripts"
+# Runtime binding inputs copied beneath the importable package. The router
+# resolves the same bytes from either a source checkout or an installed wheel.
+package-data = [
+  "schemas/decision-receipt.schema.json",
+  "schemas/route-request.schema.json",
+]
 # Explicit sdist allowlist: only these files and directories ship in the sdist.
 sdist-include = [
   ".claude-plugin",
