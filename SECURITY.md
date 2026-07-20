@@ -2,8 +2,8 @@
 
 ## Supported versions
 
-ChoiceGate is pre-1.0. Security fixes apply only to the current 0.1.0 pre-release line; no stable
-release line is supported yet.
+ChoiceGate is pre-1.0. Security fixes apply only to the current 0.2.0 source line; PyPI 0.1.0 is
+the latest published package and no stable release line is supported yet.
 
 ## Reporting a vulnerability
 

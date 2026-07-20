@@ -1,6 +1,6 @@
 {
   "name": "choicegate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Selects one safe, evidence-bound capability path without executing or installing it.",
   "author": {
     "name": "Rahul Krishna"

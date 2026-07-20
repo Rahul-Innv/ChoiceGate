@@ -1,0 +1,51 @@
+{
+  "receipt_version": "releasebench.release-preparation/v1",
+  "repository": "ChoiceGate",
+  "base_commit": "dfc5c23ea06e363327b7979f8d99bb097c72e026",
+  "branch": "release/v0.2.0-prep",
+  "selected_version": "0.2.0",
+  "semver_change": "MINOR",
+  "semver_evidence": [
+    "The new public-demo-v1 profile makes the complete router reproducible from public artifacts for the first time.",
+    "Owner-accepted and legacy owner profiles retain their strict commit and inventory authority boundary.",
+    "The existing 0.x command names remain available; no 1.0 stability claim is made."
+  ],
+  "local_diff": [
+    ".claude-plugin/marketplace.json",
+    ".claude-plugin/plugin.json",
+    ".codex-plugin/plugin.json",
+    "CHANGELOG.md",
+    "README.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "STATUS.md",
+    "VERSION",
+    "docs/public/RELEASE-PREPARATION-0.2.0.json",
+    "packaging/surface-package.json",
+    "pyproject.toml",
+    "scripts/__init__.py",
+    "tests/test_repo_readiness.py"
+  ],
+  "test_evidence": [
+    "python -B -m unittest discover -s tests -p test_*.py: PASS (23 tests)",
+    "python -B -m compileall -q scripts tools: PASS",
+    "python -B tools/build_public_route_demo.py --check: PASS",
+    "two deterministic Python package builds: PASS",
+    "python -B -m twine check: PASS (wheel and sdist)",
+    "two deterministic surface-package builds: PASS",
+    "git diff --check: PASS"
+  ],
+  "compare_link_policy": "No 0.1.0-to-0.2.0 compare link: no matching 0.1.0 source tag exists.",
+  "closed_actions": {
+    "local_tag": "not created",
+    "tag_push": "not performed",
+    "gitlab_release": "not created",
+    "pypi_publication": "not performed",
+    "marketplace_publication": "not performed"
+  },
+  "owner_only_commands": {
+    "annotated_tag_after_merge_and_artifact_verification": "git tag -a v0.2.0 -m \"ChoiceGate 0.2.0 - public full-router profile\"",
+    "tag_push_after_separate_approval": "git push origin v0.2.0",
+    "host_release_after_separate_approval": "Create one GitLab Release for existing tag v0.2.0 from the exact reviewed commit."
+  }
+}

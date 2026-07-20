@@ -29,8 +29,8 @@ accepted external capability registry remains the lifecycle and priority authori
 ## Next-release gate
 
 - [ ] Recheck privacy, licenses, dependencies, package contents, and README/demo claims.
-- [ ] Select a version newer than the published 0.1.0, then decide and approve its tag, GitLab
-  Release, any settings changes, and post-release verification.
+- [x] Select and commit 0.2.0, a minor release for the new public full-router profile.
+- [ ] After merge and exact-head verification, separately decide and approve its tag, GitLab
+  Release, package publication, any settings changes, and post-release verification.
 - [ ] Activate or promote skills only through a separate registry lifecycle decision.
-- [ ] Publish no new marketplace or package artifact without a newer committed version and a new
-  exact owner approval.
+- [ ] Publish no new marketplace or package artifact without a new exact owner approval.
