@@ -262,3 +262,9 @@ ChoiceGate is available under the [MIT License](LICENSE). Contributions follow
 [ROADMAP.md](ROADMAP.md).
 
 Built by Rahul Krishna.
+
+## Contributors
+
+- [Rahul Krishna](https://github.com/Rahul-Innv) - creator and contributor.
+- Claude Code - AI development assistance.
+- Codex - AI development assistance.
